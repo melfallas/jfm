@@ -57,6 +57,11 @@
           <scope>provided</scope>
       </dependency>
       <dependency>
+          <groupId>com.googlecode.json-simple</groupId>
+          <artifactId>json-simple</artifactId>
+          <version>1.1</version>
+      </dependency>
+      <dependency>
 			<groupId>sqljdbc</groupId>
 			<artifactId>sqljdbc4-4.0</artifactId>
 			<version>4-4.0</version>

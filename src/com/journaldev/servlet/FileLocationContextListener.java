@@ -14,9 +14,9 @@ public class FileLocationContextListener implements ServletContextListener {
     	
 //    	String rootPath = System.getProperty("catalina.home");
     	//Datasys
-    	//String rootPath = "/home/soporte/fileserver";
+    	String rootPath = "/home/soporte/fileserver";
     	//Guatemala
-    	String rootPath = "/fileserver/archivos/server1";
+    	//String rootPath = "/fileserver/archivos/server1";
     	
     	ServletContext ctx = servletContextEvent.getServletContext();
 //    	String relativePath = ctx.getInitParameter("tempfile.dir");				

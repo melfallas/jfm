@@ -31,14 +31,14 @@ public class UploadDownloadFileServlet extends HttpServlet {
 	public static Connection connObj;
 	
 	//Datasys
-	//public static String JDBC_URL = "jdbc:sqlserver://172.31.251.128:1433;databaseName=compliancedb";
-	//public static String user = "compliancelogin";
-	//public static String pass = "Datasys123";
+	public static String JDBC_URL = "jdbc:sqlserver://172.31.251.128:1433;databaseName=compliancedb";
+	public static String user = "compliancelogin";
+	public static String pass = "Datasys123";
 	
 	//Guatemala
-	public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliancedb";
-	public static String user = "sa";
-	public static String pass = "Datasys123";
+	//public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliance";
+	//public static String user = "sa";
+	//public static String pass = "Datasys123";
 	
     private ServletFileUpload uploader = null;
     
@@ -56,8 +56,7 @@ public class UploadDownloadFileServlet extends HttpServlet {
 		if(fileName == null || fileName.equals("")){
 			throw new ServletException("File Name can't be null or empty");
 		}
-		
-		System.out.println(fileName);
+
 		String [] params = {};
 		String lastPath = "";
 		if(fileName.contains("custom")) {
@@ -65,9 +64,9 @@ public class UploadDownloadFileServlet extends HttpServlet {
 		}else {
 			params = getFilePath(fileName);
 			//Datasys
-			//lastPath = params[0].replace("/home/soporte/fileserver/files/", "");
+			lastPath = params[0].replace("/home/soporte/fileserver/files/", "");
 			//Guatemala
-			lastPath = params[0].replace("/fileserver/archivos/server1/files/", "");
+			//lastPath = params[0].replace("/fileserver/archivos/server1/files/", "");
 		}
 
 		System.out.println("real_path: " + request.getServletContext().getAttribute("FILES_DIR")+File.separator+lastPath);
@@ -115,17 +114,11 @@ public class UploadDownloadFileServlet extends HttpServlet {
 			while(fileItemsIterator.hasNext()){
 				FileItem fileItem = fileItemsIterator.next();
 				if (fileItem.isFormField()) {
-					System.out.println(lastPath);
 					lastPath = fileItem.getString().trim();
 					File file = new File(request.getServletContext().getAttribute("FILES_DIR")+File.separator+"custom/"+lastPath);
 					if(!file.exists()) file.mkdirs();
 				}else {
-					System.out.println("FieldName="+fileItem.getFieldName());
-					System.out.println("FileName="+fileItem.getName());
-					System.out.println("ContentType="+fileItem.getContentType());
-					System.out.println("Size in bytes="+fileItem.getSize());
-					
-					File file = new File(request.getServletContext().getAttribute("FILES_DIR")+File.separator+"custom/"+lastPath+"/"+fileItem.getName());
+					File file = new File(request.getServletContext().getAttribute("FILES_DIR")+File.separator+"custom/"+lastPath+"/"+fileItem.getName().replace(" ",""));
 					System.out.println("Absolute Path at server="+file.getAbsolutePath());
 					fileItem.write(file);
 					ajaxUpdateResult += fileItem.getName();
@@ -153,8 +146,8 @@ public class UploadDownloadFileServlet extends HttpServlet {
                 		+ "WHERE filename='" + filename + "' ORDER BY file_path desc");
 
                 while(results.next()) {
-                    filePath = results.getNString("file_path");
-                    realFileName = results.getNString("real_filename");
+                    filePath = results.getString("file_path");
+                    realFileName = results.getString("real_filename");
                 }
 			}
 			connObj.close();
