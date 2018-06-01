@@ -1,6 +1,5 @@
 package com.journaldev.servlet;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
@@ -19,16 +18,16 @@ public class LoginServlet extends HttpServlet {
     public static Connection connObj;
 
     //Datasys
-//    public static String JDBC_URL = "jdbc:sqlserver://172.31.251.128:1433;databaseName=compliancedb";
-//    public static String user = "compliancelogin";
-//    public static String pass = "Datasys123";
-//    public static String table = "[compliancedb].[dbo].[jc_users]";
+    public static String JDBC_URL = "jdbc:sqlserver://172.31.251.128:1433;databaseName=compliancedb";
+    public static String USER = "compliancelogin";
+    public static String PASSWORD = "Datasys123";
+    public static String LOGIN_TABLE = "[compliancedb].[dbo].[jc_users]";
 
     //Guatemala
-    public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliance";
-    public static String user = "sa";
-    public static String pass = "Datasys123";
-    public static String table = "[compliance].[dbo].[jc_users]";
+//    public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliance";
+//    public static String USER = "sa";
+//    public static String PASSWORD = "Datasys123";
+//    public static String LOGIN_TABLE = "[compliance].[dbo].[jc_users]";
 
     @Override
     public void init() throws ServletException {
@@ -38,16 +37,15 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String system = request.getParameter("system");
         String sysUsername = request.getParameter("username");
-        System.out.println(system);
-        System.out.println(sysUsername);
         JSONObject obj = new JSONObject();
+
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            connObj = DriverManager.getConnection(JDBC_URL,user,pass);
+            connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
             if(connObj != null) {
                 Statement statement = connObj.createStatement();
                 ResultSet results = statement.executeQuery("SELECT  username, password " +
-                        "FROM " + table +
+                        "FROM " + LOGIN_TABLE +
                         " WHERE system = '"+ system + "' AND sys_username = '" + sysUsername + "'");
 
                 while(results.next()) {
@@ -59,11 +57,9 @@ public class LoginServlet extends HttpServlet {
         } catch(Exception sqlException) {
             sqlException.printStackTrace();
         }
+
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-
-        System.out.println(obj);
-
         out.print(obj);
         out.flush();
     }
@@ -73,18 +69,15 @@ public class LoginServlet extends HttpServlet {
         String systemUsername = request.getParameter("username");
         String username = request.getParameter("jusername");
         String password = request.getParameter("jpassword");
-        System.out.println(systemName);
-        System.out.println(systemUsername);
-        System.out.println(username);
-        System.out.println(password);
         JSONObject obj = null;
+
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            connObj = DriverManager.getConnection(JDBC_URL,user,pass);
+            connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
             if(connObj != null) {
                 Statement statement = connObj.createStatement();
                 ResultSet results = statement.executeQuery("SELECT  username, password " +
-                        "FROM " + table +
+                        "FROM " + LOGIN_TABLE +
                         " WHERE system = '"+ systemName + "' AND sys_username = '" + systemUsername + "'");
 
                 while(results.next()) {
@@ -94,14 +87,14 @@ public class LoginServlet extends HttpServlet {
                 }
 
                 if(obj == null){
-                    PreparedStatement stmt = connObj.prepareStatement("INSERT INTO " + table + " (system, sys_username, username, password) VALUES (?, ?, ?, ?)");
+                    PreparedStatement stmt = connObj.prepareStatement("INSERT INTO " + USER + " (system, sys_username, username, password) VALUES (?, ?, ?, ?)");
                     stmt.setString(1, systemName);
                     stmt.setString(2, systemUsername);
                     stmt.setString(3, username);
                     stmt.setString(4, password);
                     stmt.executeUpdate();
                 }else{
-                    PreparedStatement stmt = connObj.prepareStatement("UPDATE " + table + " SET username = ?, password = ? WHERE system = ? AND sys_username = ?" );
+                    PreparedStatement stmt = connObj.prepareStatement("UPDATE " + PASSWORD + " SET username = ?, password = ? WHERE system = ? AND sys_username = ?" );
                     stmt.setString(1, username);
                     stmt.setString(2, password);
                     stmt.setString(3, systemName);
@@ -112,11 +105,9 @@ public class LoginServlet extends HttpServlet {
         } catch(Exception sqlException) {
             sqlException.printStackTrace();
         }
+
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-
-        System.out.println(obj);
-
         out.print(obj);
         out.flush();
     }

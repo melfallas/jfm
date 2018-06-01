@@ -29,19 +29,20 @@ public class UploadDownloadFileServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	public static Connection connObj;
+    private ServletFileUpload uploader = null;
 	
 	//Datasys
 	public static String JDBC_URL = "jdbc:sqlserver://172.31.251.128:1433;databaseName=compliancedb";
-	public static String user = "compliancelogin";
-	public static String pass = "Datasys123";
+	public static String USER = "compliancelogin";
+	public static String PASSWORD = "Datasys123";
+	public static String FOLDER_PATH = "/home/soporte/fileserver/files/";
 	
 	//Guatemala
 	//public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliance";
-	//public static String user = "sa";
-	//public static String pass = "Datasys123";
-	
-    private ServletFileUpload uploader = null;
-    
+	//public static String USER = "sa";
+	//public static String PASSWORD = "Datasys123";
+	//public static String FOLDER_PATH = "/fileserver/archivos/server1/files/";
+
 	@Override
 	public void init() throws ServletException{
 		DiskFileItemFactory fileFactory = new DiskFileItemFactory();
@@ -63,10 +64,7 @@ public class UploadDownloadFileServlet extends HttpServlet {
 			lastPath = fileName;
 		}else {
 			params = getFilePath(fileName);
-			//Datasys
-			lastPath = params[0].replace("/home/soporte/fileserver/files/", "");
-			//Guatemala
-			//lastPath = params[0].replace("/fileserver/archivos/server1/files/", "");
+			lastPath = params[0].replace(FOLDER_PATH, "");
 		}
 
 		System.out.println("real_path: " + request.getServletContext().getAttribute("FILES_DIR")+File.separator+lastPath);
@@ -139,7 +137,7 @@ public class UploadDownloadFileServlet extends HttpServlet {
 		String realFileName = "";
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			connObj = DriverManager.getConnection(JDBC_URL,user,pass);
+			connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
 			if(connObj != null) {
                 Statement statement = connObj.createStatement();
                 ResultSet results = statement.executeQuery("SELECT filename, real_filename, file_path FROM aft_log "
