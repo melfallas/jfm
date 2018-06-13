@@ -50,11 +50,26 @@ public class GetSessionMessagesServlet extends HttpServlet {
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                 connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
                 if(connObj != null) {
-                    Statement statement = connObj.createStatement();
+
+                	Statement statement = connObj.createStatement();
+                    
+                    String query = 
+                    		"SELECT  sent_date, to_jid, from_jid, body_string " +
+                            "FROM "+ MESSAGE_TABLE +
+                            " WHERE "
+                            + "((to_jid LIKE '%" + to_jid + "%' AND from_jid LIKE '%" + from_jid + "%') " 
+                            + " OR (to_jid LIKE '%" + from_jid + "%' AND from_jid LIKE '%" + to_jid + "%')) "
+                    		+ "AND direction = 'O'"
+                            + " ORDER BY [sent_date] ASC"
+                    ;
+                    
+                    ResultSet results = statement.executeQuery(query);
+                    /*
                     ResultSet results = statement.executeQuery("SELECT  sent_date, to_jid, from_jid, body_string " +
                             "FROM "+ MESSAGE_TABLE +
                             " WHERE ((to_jid = '"+to_jid+"' and from_jid LIKE '" + from_jid + "%') or (to_jid = '" + from_jid + "' and from_jid LIKE '" + to_jid + "%')) and direction = 'O'" +
                             "ORDER BY sent_date asc");
+                    */
 
                     while(results.next()) {
                         obj = new JSONObject();
