@@ -87,14 +87,14 @@ public class LoginServlet extends HttpServlet {
                 }
 
                 if(obj == null){
-                    PreparedStatement stmt = connObj.prepareStatement("INSERT INTO " + USER + " (system, sys_username, username, password) VALUES (?, ?, ?, ?)");
+                    PreparedStatement stmt = connObj.prepareStatement("INSERT INTO " + LOGIN_TABLE + " (system, sys_username, username, password) VALUES (?, ?, ?, ?)");
                     stmt.setString(1, systemName);
                     stmt.setString(2, systemUsername);
                     stmt.setString(3, username);
                     stmt.setString(4, password);
                     stmt.executeUpdate();
                 }else{
-                    PreparedStatement stmt = connObj.prepareStatement("UPDATE " + PASSWORD + " SET username = ?, password = ? WHERE system = ? AND sys_username = ?" );
+                    PreparedStatement stmt = connObj.prepareStatement("UPDATE " + LOGIN_TABLE + " SET username = ?, password = ? WHERE system = ? AND sys_username = ?" );
                     stmt.setString(1, username);
                     stmt.setString(2, password);
                     stmt.setString(3, systemName);
