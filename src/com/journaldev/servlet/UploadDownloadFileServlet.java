@@ -38,10 +38,10 @@ public class UploadDownloadFileServlet extends HttpServlet {
 	public static String FOLDER_PATH = "/home/soporte/fileserver/files/";
 	
 	//Guatemala
-	//public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliance";
-	//public static String USER = "sa";
-	//public static String PASSWORD = "Datasys123";
-	//public static String FOLDER_PATH = "/fileserver/archivos/server1/files/";
+//	public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliance";
+//	public static String USER = "sa";
+//	public static String PASSWORD = "Datasys123";
+//	public static String FOLDER_PATH = "/fileserver/archivos/server1/files/";
 
 	@Override
 	public void init() throws ServletException{
