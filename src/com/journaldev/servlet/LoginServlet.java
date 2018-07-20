@@ -38,21 +38,16 @@ public class LoginServlet extends HttpServlet {
         String system = request.getParameter("system");
         String sysUsername = request.getParameter("username");
         JSONObject obj = new JSONObject();
-        
         try {
-        	
         	  Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
               connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
-              if(connObj != null) {
-            	  
-            	  CallableStatement cStmt = connObj.prepareCall("{call jabber.consultar(?)}");  
+              if(connObj != null) { 
+            	  CallableStatement cStmt = connObj.prepareCall("{call jabber.SP_VerifyWebChatUser(?)}");  
             	  cStmt.setString(1, sysUsername); 
             	// Process all returned result sets  
                   cStmt.execute();    
                   final ResultSet rs = cStmt.getResultSet();
-                  
                   while (rs.next()) {
-					
                 	  System.out.println("Cadena de caracteres pasada como parametro de entrada="+rs.getString("NombreUsuario"));
                 	  obj = new JSONObject();
                       obj.put("username", rs.getString("NombreUsuario"));
@@ -64,7 +59,6 @@ public class LoginServlet extends HttpServlet {
         } catch(Exception sqlException) {
             sqlException.printStackTrace();
         }
-
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         out.print(obj);
@@ -72,37 +66,29 @@ public class LoginServlet extends HttpServlet {
     }
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String systemName = request.getParameter("system");//sicomp
-        String systemUsername = request.getParameter("username");//usuario sicomp
-        String username = request.getParameter("jusername");//component
-        String password = request.getParameter("jpassword");//component
-        //String modificador = request.getParameter("modificador");
+        String systemName = request.getParameter("system");
+        String systemUsername = request.getParameter("username");
+        String username = request.getParameter("jusername");
+        String password = request.getParameter("jpassword");
         String modificador = "NA";
         JSONObject obj = null;
-
         try {
-        	
         	   Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
-                 
-               if(connObj != null) {
-            	   
-                   CallableStatement cStmt = connObj.prepareCall("{call jabber.UsuarioAgregar(?, ?, ?, ?, ?)}");  
-                   
-                   cStmt.setString(1, systemName); 
-             	   cStmt.setString(2, systemUsername);
+               if(connObj != null) {   
+                   CallableStatement cStmt = connObj.prepareCall("{call jabber.SP_SaveWebChatUser(?, ?, ?, ?, ?)}");  
+                   cStmt.setString(1, systemUsername); 
+             	   cStmt.setString(2, systemName);
              	   cStmt.setString(3, username);
              	   cStmt.setString(4, password);
              	   cStmt.setString(5, modificador);
              	   cStmt.execute();       
                }
-               
         	//System.out.println("Este es el doPost");
         	
         } catch(Exception sqlException) {
             sqlException.printStackTrace();
         }
-
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         out.print(obj);
