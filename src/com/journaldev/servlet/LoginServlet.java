@@ -33,7 +33,7 @@ public class LoginServlet extends HttpServlet {
     public void init() throws ServletException {
         //Initialize Servlet
     }
-    
+    /*
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String system = request.getParameter("system");
         String sysUsername = request.getParameter("username");
@@ -50,7 +50,7 @@ public class LoginServlet extends HttpServlet {
                   while (rs.next()) {
                 	  System.out.println("Cadena de caracteres pasada como parametro de entrada="+rs.getString("NombreUsuario"));
                 	  obj = new JSONObject();
-                      obj.put("username", rs.getString("NombreUsuario"));
+                      obj.put("username", rs.getString("Sistema"));
                       obj.put("password", rs.getString("contrasena"));
 				}
               	//System.out.println("Este es el doGet"); 
@@ -76,7 +76,7 @@ public class LoginServlet extends HttpServlet {
         	   Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
                if(connObj != null) {   
-                   CallableStatement cStmt = connObj.prepareCall("{call jabber.SP_SaveWebChatUser(?, ?, ?, ?, ?)}");  
+                   CallableStatement cStmt = connObj.prepareCall("{call [jabber].[UsuarioAgregarModificar](?, ?, ?, ?, ?)}");  
                    cStmt.setString(1, systemUsername); 
              	   cStmt.setString(2, systemName);
              	   cStmt.setString(3, username);
@@ -94,7 +94,8 @@ public class LoginServlet extends HttpServlet {
         out.print(obj);
         out.flush();
     }
-/*
+    */
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String system = request.getParameter("system");
         String sysUsername = request.getParameter("username");
@@ -174,6 +175,6 @@ public class LoginServlet extends HttpServlet {
         out.flush();
     }
     
-    */
+    
 
 }
