@@ -32,6 +32,9 @@
 
     <script>
         $("#submit").click(function() {
+        	$("#submit").html('Cargando....');
+        	$('#submit').css('background-color','red');
+        	$( "#submit" ).prop( "disabled", true );
             var filename = $("#filename").val();
             var username = $("#username").val();
             var password = $("#password").val();
@@ -51,6 +54,8 @@
                     window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename="+filename);
                 }else{
                     $("#error").show();
+                    $('#submit').css('background-color','#337ab7');
+                    $( "#submit" ).prop( "disabled", false );
                 }
             });
         });
