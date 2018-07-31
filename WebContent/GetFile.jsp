@@ -20,6 +20,8 @@
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" placeholder="Password">
                 </div>
+                
+                <p id="message"></p>
 
                 <label id="error" style="color: red; display: none;">Credenciales incorrectas</label>
 
@@ -32,12 +34,22 @@
 
     <script>
         $("#submit").click(function() {
-        	$("#submit").html('Cargando....');
-        	$('#submit').css('background-color','red');
-        	$( "#submit" ).prop( "disabled", true );
             var filename = $("#filename").val();
             var username = $("#username").val();
             var password = $("#password").val();
+			if(username.trim() != "" && password.trim() != ""){	
+            	$('#submit').css('background-color','green');
+            	$( "#submit" ).prop( "disabled", true );
+            	$("#submit").html('Descargar');
+            }else{
+            	$('<p>Por favor ingresar los datos requeridos !</p>').appendTo('#message').css('color','red');;	
+            	setTimeout(
+            			  function() 
+            			  {
+            				$( "#message" ).empty();
+            			  }, 2000);
+            	
+            }
             //Datasys
             var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
             //Guatemala
@@ -50,13 +62,30 @@
             }).done(function( data ) {
                 console.log( data );
                 if(data.username != null){
+                	
+                	$("#submit").html('Descargando...');
+                
                     console.log("dercarga");
                     window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename="+filename);
+                	$("#submit").html('Descargado');
                 }else{
-                    $("#error").show();
-                    $('#submit').css('background-color','#337ab7');
-                    $( "#submit" ).prop( "disabled", false );
+ 
+                    setTimeout(
+              			  function() 
+              			  {
+              				  $("#error").show();
+                              $('#submit').css('background-color','gray');
+              			
+              			  }, 4000);
+    
                 }
+                 $("#submit").html('Login');
+				 $('#submit').css('background-color','#337ab7');
+				 $('#submit').css('color','#fff');
+				 $('#submit').css('border-color','#2e6da4');
+				 $( "#submit" ).prop( "disabled", false );
+				 $('#username').val('');
+				 $('#password').val('');
             });
         });
     </script>
