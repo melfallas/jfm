@@ -119,7 +119,7 @@ public class GetSessionMessagesServlet extends HttpServlet {
             String to = messageInfo.split("/")[1];
             String threadId = messageInfo.split("/")[2];
             String fileTransfer = messageInfo.replace(from + "/" + to + "/" + threadId + "/","");
-            fileTransfer = fileTransfer.replaceAll("<mime-type>.*","").replaceAll(".*<url>","").replace("</url>","");
+            fileTransfer = fileTransfer.replaceAll("<mime-type>.*","");
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connObj = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
             if (connObj != null) {
@@ -131,7 +131,7 @@ public class GetSessionMessagesServlet extends HttpServlet {
                         " ORDER BY [sent_date] DESC");
                 while(results.next()) {
                     if(results.getString("message_string").contains(fileTransfer)){
-                        results.updateString( "body_string", fileTransfer);
+                        results.updateString( "body_string", fileTransfer.replace("<size-bytes>","<size-bytes>#"));
                         results.updateRow();
                     };
                 }
