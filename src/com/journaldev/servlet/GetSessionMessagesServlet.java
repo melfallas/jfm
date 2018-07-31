@@ -98,7 +98,49 @@ public class GetSessionMessagesServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String responseVal = "";
+        if(updateMessage(request)){
+            responseVal = "update successful";
+        }else{
+            responseVal = "update failed";
 
+        };
+        response.setContentType("text/plain");
+        PrintWriter out = response.getWriter();
+        out.print(responseVal);
+        out.flush();
+    }
+
+    private boolean updateMessage(HttpServletRequest request){
+        String messageInfo = request.getParameter("messageInfo");
+        boolean result = false;
+        try {
+            String from = messageInfo.split("/")[0];
+            String to = messageInfo.split("/")[1];
+            String threadId = messageInfo.split("/")[2];
+            String fileTransfer = messageInfo.replace(from + "/" + to + "/" + threadId + "/","");
+            fileTransfer = fileTransfer.replaceAll("<mime-type>.*","").replaceAll(".*<url>","").replace("</url>","");
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            connObj = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+            if (connObj != null) {
+                Statement statement = connObj.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+                        ResultSet.CONCUR_UPDATABLE);
+                ResultSet results = statement.executeQuery("SELECT  message_string, body_string " +
+                        "FROM " + MESSAGE_TABLE +
+                        " WHERE to_jid LIKE '%" + to + "' AND from_jid LIKE '%" + from + "%' AND thread_id = '" + threadId + "'" +
+                        " ORDER BY [sent_date] DESC");
+                while(results.next()) {
+                    if(results.getString("message_string").contains(fileTransfer)){
+                        results.updateString( "body_string", fileTransfer);
+                        results.updateRow();
+                    };
+                }
+            }
+            result  = true ;
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return result;
     }
 
 }
