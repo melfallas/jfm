@@ -18,17 +18,18 @@ public class UserAuthenticationServlet extends HttpServlet {
     public static Connection connObj;
 
     //Datasys
-//    public static String JDBC_URL = "jdbc:sqlserver://172.31.251.128:1433;databaseName=compliancedb";
-//    public static String USER = "compliancelogin";
-//    public static String PASSWORD = "Datasys123";
-//    public static String LOGIN_TABLE = "[compliancedb].[dbo].[jc_users]";
+    public static String JDBC_URL = "jdbc:sqlserver://172.31.251.128:1433;databaseName=compliancedb";
+    public static String USER = "compliancelogin";
+    public static String PASSWORD = "Datasys123";
+    public static String LOGIN_TABLE = "[compliancedb].[dbo].[jc_users]";
 
     //Guatemala
+    /*
     public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliance";
     public static String USER = "sa";
     public static String PASSWORD = "Datasys123";
     public static String LOGIN_TABLE = "[compliance].[dbo].[jc_users]";
-
+	*/
     @Override
     public void init() throws ServletException {
         //Initialize Servlet
@@ -39,6 +40,8 @@ public class UserAuthenticationServlet extends HttpServlet {
         String password = request.getParameter("pass");
         JSONObject obj = new JSONObject();
         try {
+        	
+     
         	/*
         	  Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
               connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
@@ -66,5 +69,8 @@ public class UserAuthenticationServlet extends HttpServlet {
         out.print(obj);
         out.flush();
     }
+    
+    
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
  
 }
