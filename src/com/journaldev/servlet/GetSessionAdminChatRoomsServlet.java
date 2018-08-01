@@ -27,7 +27,7 @@ public class GetSessionAdminChatRoomsServlet extends HttpServlet {
 //    public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliance";
 //    public static String USER = "sa";
 //    public static String PASSWORD = "Datasys123";
-//    public static String CHATROOMS_TABLE = "[compliance].[dbo].[jc_chatrooms]";
+//    public static String CHATROOMS_TABLE = "[compliance].[dbo].[tc_rooms]";
 
     @Override
     public void init() throws ServletException {
