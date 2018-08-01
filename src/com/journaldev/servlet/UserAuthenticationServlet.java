@@ -38,28 +38,35 @@ public class UserAuthenticationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String webChatUser  = request.getParameter("webuser");
         String password = request.getParameter("pass");
+        String UserParameterDB;
+        String passParameterDB;
         JSONObject obj = new JSONObject();
         try {
-        	
-     
-        	/*
-        	  Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-              connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
-              if(connObj != null) {
-            	  CallableStatement cStmt = connObj.prepareCall("{call jabber.SP_VerifyWebChatUser(?, ?)}");  
-            	  cStmt.setString(1, sysUsername); 
-            	// Process all returned result sets  
-                  cStmt.execute();    
-                  final ResultSet rs = cStmt.getResultSet();
-                  while (rs.next()) {
-                	  System.out.println("Cadena de caracteres pasada como parametro de entrada="+rs.getString("NombreUsuario"));
-                	  obj = new JSONObject();
-                      obj.put("username", rs.getString("Sistema"));
-                      obj.put("password", rs.getString("contrasena"));
+        	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
+            if(connObj != null) {
+             CallableStatement cStmt = connObj.prepareCall("{call jabber.SP_JWU_GetWebChatUserByCredentials(?,?)}");
+              cStmt.setString(1, webChatUser);
+          	  cStmt.setString(2, password);
+          	  cStmt.execute();
+          	// Process all returned result sets  
+                 final ResultSet rs = cStmt.getResultSet();
+                 if (rs.next()) {
+                	 UserParameterDB = rs.getString("JWU_WebChatUser");
+                	 passParameterDB= rs.getString("JWU_WebChatPassword");
+                	 if(webChatUser.equals(UserParameterDB)  && password.equals(passParameterDB)){
+                         //success
+                		 obj.put("result", "success");
+                     }else{
+                    	 //error
+                    	 obj.put("result", "ERROR");
+                     }
+                      }else{ 
+                    	  //validate
+                    	  obj.put("result", "ERROR");
+                	 }
 				}
-              }
-        	 */
-              obj.put("result", "success");
+              //obj.put("result", "success");
               //System.out.println("Este es el doGet"); 
         } catch(Exception sqlException) {
             sqlException.printStackTrace();
