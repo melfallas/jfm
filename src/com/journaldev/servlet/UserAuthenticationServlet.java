@@ -34,7 +34,7 @@ public class UserAuthenticationServlet extends HttpServlet {
     public void init() throws ServletException {
         //Initialize Servlet
     }
-    
+    //TODO: KEVIN
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String webChatUser  = request.getParameter("webuser");
         String password = request.getParameter("pass");
@@ -59,11 +59,11 @@ public class UserAuthenticationServlet extends HttpServlet {
                 		 obj.put("result", "success");
                      }else{
                     	 //error
-                    	 obj.put("result", "ERROR");
+                    	 obj.put("result", "error");
                      }
                       }else{ 
                     	  //validate
-                    	  obj.put("result", "ERROR");
+                    	  obj.put("result", "error");
                 	 }
 				}
               //obj.put("result", "success");
