@@ -7,6 +7,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.awt.geom.RectangularShape;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
@@ -22,6 +24,8 @@ public class UserAuthenticationServlet extends HttpServlet {
     public static String USER = "compliancelogin";
     public static String PASSWORD = "Datasys123";
     public static String LOGIN_TABLE = "[compliancedb].[dbo].[jc_users]";
+    public static String SP_COUNT_VALUE = "[jabber].[SP_JWU_CountWebChatUserRegister]";
+    public static String SP_USER_CREDENTIALS = "[jabber].[SP_JWU_GetWebChatUserByCredentials]";
 
     //Guatemala
     /*
@@ -34,7 +38,7 @@ public class UserAuthenticationServlet extends HttpServlet {
     public void init() throws ServletException {
         //Initialize Servlet
     }
-    //TODO: KEVIN
+    //TODO: KEVSAN
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String webChatUser  = request.getParameter("webuser");
         String password = request.getParameter("pass");
@@ -45,27 +49,39 @@ public class UserAuthenticationServlet extends HttpServlet {
         	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
             if(connObj != null) {
-             CallableStatement cStmt = connObj.prepareCall("{call jabber.SP_JWU_GetWebChatUserByCredentials(?,?)}");
-              cStmt.setString(1, webChatUser);
-          	  cStmt.setString(2, password);
-          	  cStmt.execute();
-          	// Process all returned result sets  
-                 final ResultSet rs = cStmt.getResultSet();
+            	CallableStatement cstmt = connObj.prepareCall("exec "+SP_COUNT_VALUE+" ?");
+                cstmt.setString(1, webChatUser);
+                cstmt.execute();
+                final ResultSet rs = cstmt.getResultSet();
                  if (rs.next()) {
-                	 UserParameterDB = rs.getString("JWU_WebChatUser");
-                	 passParameterDB= rs.getString("JWU_WebChatPassword");
-                	 if(webChatUser.equals(UserParameterDB)  && password.equals(passParameterDB)){
-                         //success
-                		 obj.put("result", "success");
-                     }else{
-                    	 //error
-                    	 obj.put("result", "error");
-                     }
-                      }else{ 
-                    	  //validate
-                    	  obj.put("result", "error");
+                	 int  countValue = rs.getInt(1);                      // Retrieve current result set value
+                	 System.out.println("Value from first result set = " + countValue); 
+                	 if(countValue > 0){
+                	     CallableStatement cStmt2 = connObj.prepareCall("{call "+SP_USER_CREDENTIALS+"(?,?)}");
+                	     cStmt2.setString(1, webChatUser);
+                	     cStmt2.setString(2, password);
+                	     cStmt2.execute();
+                	 	// Process all returned result sets 
+                         final ResultSet rs2 = cStmt2.getResultSet();
+                         if (rs2.next()) {
+                        	 
+                        	 UserParameterDB = rs2.getString("JWU_WebChatUser");
+                        	 passParameterDB= rs2.getString("JWU_WebChatPassword");
+                        	 if(webChatUser.equals(UserParameterDB)  && password.equals(passParameterDB)){
+                    		 //si es 1 local si es 0 AD
+                    		 obj.put("result", "success");
+                    		 
+                        	 }
+                         }
+                         else{ 
+                        	 obj.put("result", "error");
+                    	 }
+                	 }else{
+                		 // si 0 es AD
+                		 obj.put("result", "validate");
                 	 }
-				}
+                 }
+            }   	 
               //obj.put("result", "success");
               //System.out.println("Este es el doGet"); 
         } catch(Exception sqlException) {
@@ -76,8 +92,5 @@ public class UserAuthenticationServlet extends HttpServlet {
         out.print(obj);
         out.flush();
     }
-    
-    
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
- 
 }
