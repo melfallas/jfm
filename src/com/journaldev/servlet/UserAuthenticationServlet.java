@@ -33,6 +33,8 @@ public class UserAuthenticationServlet extends HttpServlet {
     public static String USER = "sa";
     public static String PASSWORD = "Datasys123";
     public static String LOGIN_TABLE = "[compliance].[dbo].[jc_users]";
+    public static String SP_COUNT_VALUE = "[jabber].[SP_JWU_CountWebChatUserRegister]";
+    public static String SP_USER_CREDENTIALS = "[jabber].[SP_JWU_GetWebChatUserByCredentials]";
 	*/
     @Override
     public void init() throws ServletException {
@@ -54,37 +56,33 @@ public class UserAuthenticationServlet extends HttpServlet {
                 cstmt.execute();
                 final ResultSet rs = cstmt.getResultSet();
                  if (rs.next()) {
-                	 int  countValue = rs.getInt(1);                      // Retrieve current result set value
-                	 System.out.println("Value from first result set = " + countValue); 
+                	 int  countValue = rs.getInt(1);
+                	 //System.out.println("Value from first result set = " + countValue); 
                 	 if(countValue > 0){
                 	     CallableStatement cStmt2 = connObj.prepareCall("{call "+SP_USER_CREDENTIALS+"(?,?)}");
                 	     cStmt2.setString(1, webChatUser);
                 	     cStmt2.setString(2, password);
                 	     cStmt2.execute();
-                	 	// Process all returned result sets 
+                	     // Process all returned result sets 
                          final ResultSet rs2 = cStmt2.getResultSet();
                          if (rs2.next()) {
-                        	 
                         	 UserParameterDB = rs2.getString("JWU_WebChatUser");
                         	 passParameterDB= rs2.getString("JWU_WebChatPassword");
                         	 if(webChatUser.equals(UserParameterDB)  && password.equals(passParameterDB)){
-                    		 //si es 1 local si es 0 AD
-                    		 obj.put("result", "success");
-                    		 
+	                    		 obj.put("result", "success");
                         	 }
                          }
                          else{ 
                         	 obj.put("result", "error");
                     	 }
                 	 }else{
-                		 // si 0 es AD
+                		 // Si el count es 0 se envía result = validate para autenticar con AD
                 		 obj.put("result", "validate");
                 	 }
                  }
             }   	 
-              //obj.put("result", "success");
-              //System.out.println("Este es el doGet"); 
         } catch(Exception sqlException) {
+   		 	obj.put("result", "success");
             sqlException.printStackTrace();
         }
         response.setContentType("application/json");
@@ -92,5 +90,8 @@ public class UserAuthenticationServlet extends HttpServlet {
         out.print(obj);
         out.flush();
     }
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {}
+    
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	
+    }
 }
