@@ -33,6 +33,7 @@
     </div>
     
     <script>
+    /*
     $("#submit").click(function() {
         var filename = $("#filename").val();
         var username = $("#username").val();
@@ -56,21 +57,22 @@
             }
         });
     });
-
-    /*
+    */
+    
     //  TODO: KEVIN
         $("#submit").click(function() {
             var filename = $("#filename").val();
             var username = $("#username").val();
             var password = $("#password").val();
-			if(username.trim() != "" && password.trim() != ""){	
+			if(username.trim() != "" && password.trim() != "") {	
             	//Datasys
-                //var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-            	//var userAuthenticationServiceURL =  "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
-                var userAuthenticationServiceURL =  "http://localhost:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
-            	//Guatemala
+                var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
+            	var userAuthenticationServiceURL =  "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
+            	
+                //Guatemala
                 //var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
             	//var userAuthenticationServiceURL =  "http://172.128.142.16:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
+            	
             	$.ajax({
 	                method: "GET",
 	                url: userAuthenticationServiceURL,
@@ -93,8 +95,8 @@
 	            			  }, 2000);
 	              
 	               }else if(data.result == "error"){
-	                	$('<p>Ocurrió un error durante el proceso; por favor, intente de nuevo</p>').appendTo('#message').css('color','red');
-	                	
+	                	//$('<p>Ocurrió un error durante el proceso; por favor, intente de nuevo</p>').appendTo('#message').css('color','red');
+	                	$('<p>Credenciales incorrectas. Por favor intente de nuevo.</p>').appendTo('#message').css('color','red');
 	                	setTimeout(
 	              			  function() 
 	              			  {
@@ -114,18 +116,10 @@
 	               }else if(data.result == "validate"){
 	            	   console.log("validate AD");
 	            	   //servicio de andres validate el ajax antiguo va aqui con la url 
-	            	    var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-	            	   
 	            	   //aqui puedo validar el sql exeption o AD
-	            	  
 	                       var filename = $("#filename").val();
 	                       var username = $("#username").val();
 	                       var password = $("#password").val();
-	                       //Datasys
-	                       var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-	                       //Guatemala
-	                       //var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-
 	                       $.ajax({
 	                           method: "GET",
 	                           url: url,
@@ -133,13 +127,12 @@
 	                       }).done(function( data ) {
 	                           console.log( data );
 	                           if(data.username != null){
-	                               console.log("dercarga");
+	                               //console.log("dercarga");
 	                               window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename="+filename);
 	                           }else{
 	                               $("#error").show();
 	                           }
 	                       });
-	            	
 	               }else{
 	            	   // si no esta en el sql y tampoco en el AD que me tire este mensaje
 	            	   $('<p>Ocurrió un error durante el proceso; por favor, intente de nuevo</p>').appendTo('#message').css('color','red');
@@ -148,14 +141,13 @@
             }else{
             	$('<p>Por favor ingresar los datos requeridos.</p>').appendTo('#message').css('color','red');;	
             	setTimeout(
-            			  function() 
-            			  {
-            				$( "#message" ).empty();
-            			  }, 2000);
+        			  function() 
+        			  {
+        				$( "#message" ).empty();
+        			  }, 2000);
             }
-        }); 
-    
-    */
+        });
+    	
     </script>
 </body>
 </html>
