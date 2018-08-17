@@ -125,10 +125,17 @@ public class GetSessionMessagesServlet extends HttpServlet {
             if (connObj != null) {
                 Statement statement = connObj.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
                         ResultSet.CONCUR_UPDATABLE);
-                ResultSet results = statement.executeQuery("SELECT  message_string, body_string " +
-                        "FROM " + MESSAGE_TABLE +
-                        " WHERE to_jid LIKE '%" + to + "' AND from_jid LIKE '%" + from + "%' AND thread_id = '" + threadId + "'" +
-                        " ORDER BY [sent_date] DESC");
+                String query = 
+            		"SELECT  message_string, body_string " +
+                    "FROM " + MESSAGE_TABLE 
+                    + " WHERE to_jid LIKE '%" 
+                    + to + "' AND from_jid LIKE '%" 
+                    + from + "%' AND thread_id = '" 
+                    + threadId + "'"
+                    + " ORDER BY [sent_date] DESC"
+                ;
+                //System.out.println(query);
+                ResultSet results = statement.executeQuery(query);
                 while(results.next()) {
                     if(results.getString("message_string").contains(fileTransfer)){
                         results.updateString( "body_string", fileTransfer.replace("<size-bytes>","<size-bytes>#"));
