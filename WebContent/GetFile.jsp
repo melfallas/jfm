@@ -71,7 +71,7 @@
             	
                 //Guatemala
                 //var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-            	//var userAuthenticationServiceURL =  "http://172.128.142.16:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
+            	//var userAuthenticationServiceURL =  "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
             	
             	$.ajax({
 	                method: "GET",
@@ -85,7 +85,7 @@
 	                	$( "#submit" ).prop( "disabled", true );
 	                	$("#submit").html('Descargando...');
 	            	   console.log("success");
-	                  window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename="+filename);
+	                  window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename=" + $("#filename").val());
 	                  
 	                  setTimeout(
 	            			  function() 
@@ -128,7 +128,7 @@
 	                           console.log( data );
 	                           if(data.username != null){
 	                               //console.log("dercarga");
-	                               window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename="+filename);
+	                               window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename=" + $("#filename").val());
 	                           }else{
 	                               $("#error").show();
 	                           }
