@@ -141,9 +141,12 @@ public class UploadDownloadFileServlet extends HttpServlet {
 			if(connObj != null) {
                 Statement statement = connObj.createStatement();
                 ResultSet results = statement.executeQuery("SELECT filename, real_filename, file_path FROM aft_log "
-                		+ "WHERE filename='" + filename + "' ORDER BY file_path desc");
+                		+ " WHERE filename='" + filename + "'"
+                		+ " AND file_path <> ''"
+                		+ " ORDER BY file_path desc"
+                );
 
-                while(results.next()) {
+                if(results.next()) {
                     filePath = results.getString("file_path");
                     realFileName = results.getString("real_filename");
                 }
