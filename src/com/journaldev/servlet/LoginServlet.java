@@ -22,6 +22,8 @@ public class LoginServlet extends HttpServlet {
     public static String USER = "compliancelogin";
     public static String PASSWORD = "Datasys123";
     public static String LOGIN_TABLE = "[compliancedb].[dbo].[jc_users]";
+    public static String SP_DOGET = "jabber.SP_k_selectUser";
+    public static String SP_DOPOST = "[jabber].[SP_K_insertUser]";
 
     //Guatemala
 //    public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliance";
@@ -42,7 +44,7 @@ public class LoginServlet extends HttpServlet {
         	  Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
               connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
               if(connObj != null) { 
-            	  CallableStatement cStmt = connObj.prepareCall("{call jabber.SP_VerifyWebChatUser(?)}");  
+            	  CallableStatement cStmt = connObj.prepareCall("{call "+SP_DOGET+"(?)}");  
             	  cStmt.setString(1, sysUsername); 
             	// Process all returned result sets  
                   cStmt.execute();    
@@ -51,7 +53,7 @@ public class LoginServlet extends HttpServlet {
                 	  System.out.println("Cadena de caracteres pasada como parametro de entrada="+rs.getString("NombreUsuario"));
                 	  obj = new JSONObject();
                       obj.put("username", rs.getString("Sistema"));
-                      obj.put("password", rs.getString("contrasena"));
+                      obj.put("password", rs.getString("LOCK"));
 				}
               	//System.out.println("Este es el doGet"); 
               }
@@ -62,6 +64,7 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         out.print(obj);
+        System.out.println(obj);
         out.flush();
     }
     
@@ -76,7 +79,7 @@ public class LoginServlet extends HttpServlet {
         	   Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
                if(connObj != null) {   
-                   CallableStatement cStmt = connObj.prepareCall("{call [jabber].[UsuarioAgregarModificar](?, ?, ?, ?, ?)}");  
+                   CallableStatement cStmt = connObj.prepareCall("{call "+SP_DOPOST+"(?, ?, ?, ?, ?)}");  
                    cStmt.setString(1, systemUsername); 
              	   cStmt.setString(2, systemName);
              	   cStmt.setString(3, username);
@@ -168,7 +171,7 @@ public class LoginServlet extends HttpServlet {
         } catch(Exception sqlException) {
             sqlException.printStackTrace();
         }
-
+        
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         out.print(obj);
