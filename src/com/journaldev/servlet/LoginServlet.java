@@ -15,21 +15,13 @@ import java.sql.*;
 public class LoginServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    public static Connection connObj;
-
-    //Datasys
-    public static String JDBC_URL = "jdbc:sqlserver://172.31.251.128:1433;databaseName=compliancedb";
-    public static String USER = "compliancelogin";
-    public static String PASSWORD = "Datasys123";
-    public static String LOGIN_TABLE = "[compliancedb].[dbo].[jc_users]";
-    public static String SP_DOGET = "jabber.SP_k_selectUser";
-    public static String SP_DOPOST = "[jabber].[SP_K_insertUser]";
-
-    //Guatemala
-//    public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliance";
-//    public static String USER = "sa";
-//    public static String PASSWORD = "Datasys123";
-//    public static String LOGIN_TABLE = "[compliance].[dbo].[jc_users]";
+    private static Connection connObj;    
+    private static String JDBC_URL = CommonConstants.JDBC_URL;
+    private static String USER = CommonConstants.DB_USER;
+    private static String PASSWORD = CommonConstants.DB_PASSWORD;
+    private static String LOGIN_TABLE = CommonConstants.LOGIN_TABLE;
+    private static String SP_DOGET = CommonConstants.SP_DOGET;
+    private static String SP_DOPOST = CommonConstants.SP_DOPOST;
 
     @Override
     public void init() throws ServletException {

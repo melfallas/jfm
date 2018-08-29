@@ -17,25 +17,13 @@ import java.sql.*;
 public class UserAuthenticationServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    public static Connection connObj;
-
-    //Datasys
-    public static String JDBC_URL = "jdbc:sqlserver://172.31.251.128:1433;databaseName=compliancedb";
-    public static String USER = "compliancelogin";
-    public static String PASSWORD = "Datasys123";
-    public static String LOGIN_TABLE = "[compliancedb].[dbo].[jc_users]";
-    public static String SP_COUNT_VALUE = "[jabber].[SP_JWU_CountWebChatUserRegister]";
-    public static String SP_USER_CREDENTIALS = "[jabber].[SP_JWU_GetWebChatUserByCredentials]";
-
-    //Guatemala
-    /*
-    public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliance";
-    public static String USER = "sa";
-    public static String PASSWORD = "Datasys123";
-    public static String LOGIN_TABLE = "[compliance].[dbo].[jc_users]";
-    public static String SP_COUNT_VALUE = "[jabber].[SP_JWU_CountWebChatUserRegister]";
-    public static String SP_USER_CREDENTIALS = "[jabber].[SP_JWU_GetWebChatUserByCredentials]";
-	*/
+    private static Connection connObj;    
+    private static String JDBC_URL = CommonConstants.JDBC_URL;
+    private static String USER = CommonConstants.DB_USER;
+    private static String PASSWORD = CommonConstants.DB_PASSWORD;
+    private static String SP_COUNT_VALUE = CommonConstants.SP_COUNT_VALUE;
+    private static String SP_USER_CREDENTIALS = CommonConstants.SP_USER_CREDENTIALS;
+	
     @Override
     public void init() throws ServletException {
         //Initialize Servlet

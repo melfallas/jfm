@@ -10,11 +10,7 @@ import javax.servlet.annotation.WebListener;
 @WebListener
 public class FileLocationContextListener implements ServletContextListener {
 
-	//Datasys
-	public static String ROOT_PATH = "/home/soporte/fileserver";
-
-	//Guatemala
-//	public static String ROOT_PATH = "/fileserver/archivos/server1";
+	public static String ROOT_PATH = CommonConstants.ROOT_PATH;
 
     public void contextInitialized(ServletContextEvent servletContextEvent) {
     	

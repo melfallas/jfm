@@ -28,20 +28,12 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class UploadDownloadFileServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	public static Connection connObj;
+	private static Connection connObj;    
+    private static String JDBC_URL = CommonConstants.JDBC_URL;
+    private static String USER = CommonConstants.DB_USER;
+    private static String PASSWORD = CommonConstants.DB_PASSWORD;
+    private static String FOLDER_PATH = "/fileserver/archivos/server1/files/";
     private ServletFileUpload uploader = null;
-	
-	//Datasys
-	public static String JDBC_URL = "jdbc:sqlserver://172.31.251.128:1433;databaseName=compliancedb";
-	public static String USER = "compliancelogin";
-	public static String PASSWORD = "Datasys123";
-	public static String FOLDER_PATH = "/home/soporte/fileserver/files/";
-	
-	//Guatemala
-//	public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliance";
-//	public static String USER = "sa";
-//	public static String PASSWORD = "Datasys123";
-//	public static String FOLDER_PATH = "/fileserver/archivos/server1/files/";
 
 	@Override
 	public void init() throws ServletException{

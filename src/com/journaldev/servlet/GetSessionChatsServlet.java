@@ -16,19 +16,11 @@ import java.sql.*;
 public class GetSessionChatsServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    public static Connection connObj;
-
-    //Datasys
-    public static String JDBC_URL = "jdbc:sqlserver://172.31.251.128:1433;databaseName=compliancedb";
-    public static String USER = "compliancelogin";
-    public static String PASSWORD = "Datasys123";
-    public static String CHATS_TABLE = "[compliancedb].[dbo].[jc_chats]";
-
-    //Guatemala
-//    public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliance";
-//    public static String USER = "sa";
-//    public static String PASSWORD = "Datasys123";
-//    public static String CHATS_TABLE = "[compliance].[dbo].[jc_chats]";
+    private static Connection connObj;    
+    private static String JDBC_URL = CommonConstants.JDBC_URL;
+    private static String USER = CommonConstants.DB_USER;
+    private static String PASSWORD = CommonConstants.DB_PASSWORD;
+    private static String CHATS_TABLE = CommonConstants.CHATS_TABLE;
 
     @Override
     public void init() throws ServletException {

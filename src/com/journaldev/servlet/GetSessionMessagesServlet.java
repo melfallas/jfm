@@ -17,19 +17,11 @@ import java.sql.*;
 public class GetSessionMessagesServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    public static Connection connObj;
-
-    //Datasys
-    public static String JDBC_URL = "jdbc:sqlserver://172.31.251.128:1433;databaseName=compliancedb";
-    public static String USER = "compliancelogin";
-    public static String PASSWORD = "Datasys123";
-    public static String MESSAGE_TABLE = "[compliancedb].[dbo].[jm]";
-
-    //Guatemala
-//    public static String JDBC_URL = "jdbc:sqlserver://172.18.142.15:1433;databaseName=compliance";
-//    public static String USER = "sa";
-//    public static String PASSWORD = "Datasys123";
-//    public static String MESSAGE_TABLE = "[compliance].[dbo].[jm]";
+    private static Connection connObj;    
+    private static String JDBC_URL = CommonConstants.JDBC_URL;
+    private static String USER = CommonConstants.DB_USER;
+    private static String PASSWORD = CommonConstants.DB_PASSWORD;
+    private static String MESSAGE_TABLE = CommonConstants.MESSAGE_TABLE;
 
     @Override
     public void init() throws ServletException {
