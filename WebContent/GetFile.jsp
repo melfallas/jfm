@@ -61,11 +61,10 @@
     */
     // KEVIN SANDI
   var errorFailedMessage = "Credenciales incorrectas. Por favor intente de nuevo";
-  var accessDenied = "EL usuario "+$("#username").val();+" no tiene permiso para descargar el archivo";
+  var accessDenied = "EL usuario no tiene permiso para descargar el archivo";
   var emptyFields = "Se requiere datos para procesar la solicitud";
   var validateAD = "Sus datos están siendo procesados";
   var errorMessage = "Ocurrió un error durante el proceso; por favor, intente de nuevo";
-  
  $("#submit").click(function() {
 	 $( "#message" ).empty();
 	  //var getuserurl = urlParams.user[0];
