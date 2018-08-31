@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 public class LoginFileServlet extends HttpServlet {
 
     private String fileName;
+    private String username;
 
     public void init() throws ServletException {
 
@@ -22,8 +23,9 @@ public class LoginFileServlet extends HttpServlet {
             throws ServletException, IOException {
 
         fileName = request.getParameter("filename");
-
         request.setAttribute("fileName",fileName);
+        username = request.getParameter("usr");
+        request.setAttribute("username",username);
 
         String nextHTML = "/GetFile.jsp";
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextHTML);
