@@ -10,6 +10,7 @@
             <div class="col-md-6  center-block">
                 <h1>Ingrese sus credenciales para descargar el archivo:</h1>
                 <input type="hidden" name="filename" id="filename" value='${fileName}'/>
+                <input type="hidden" name="urluser" id="urluser" value='${username}'/>
 
                 <div class="form-group">
                     <label for="username">Usuario</label>
@@ -58,112 +59,95 @@
         });
     });
     */
-    
     // KEVIN SANDI
-    $("#username, #password").keyup(function() {
-    	var user = $('#username').val(); 
-    	//console.log(user);
-    	var addExpression = user.includes("@");
-    	//console.log(addExpression);
-    	if(user.includes("@")){
-    		 $( "#message" ).empty();
-    		 $('<p>Ingresar solo nombre de usuario</p>').appendTo('#message').css('color','red');
-    	var geRestriction = true;
-    	}else{
-    		 $( "#message" ).empty();	
-    	}
-        var input = $(this);
-        if(  $("#username").val() &&  $("#password").val() === "") {
-          $( "#submit" ).prop( "disabled", true );
-        }else{
-        	 $( "#submit" ).prop( "disabled", false );
-        }
-    });
-        $("#submit").click(function() {
-            var filename = $("#filename").val();
-            var username = $("#username").val();
-            var password = $("#password").val();
-			if(username.trim() != "" && password.trim() != "") {
-				  $("#username,#password").prop("disabled",true);
-           	      $( "#submit" ).prop( "disabled", true );
-            	//Datasys
-                var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-            	var userAuthenticationServiceURL =  "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
-            	
-                //Guatemala
-                //var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-            	//var userAuthenticationServiceURL =  "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
-            	$.ajax({
-	                method: "GET",
-	                url: userAuthenticationServiceURL,
-	                dataType: "json"
-	               
-	            }).done(function( data ) {
-	                console.log( data );
-	               if( data.result == "success"){
-	            	   
-	            		//$('#submit').css('background-color','grey');
-	                	$( "#submit" ).prop( "disabled", true );
-	                	$("#submit").html('Descargando....');
-	            	   console.log("success");
-	                  window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename=" + $("#filename").val());
-	                  setTimeout(
-	            			  function() 
-	            			  {
-	            				$('#submit').css('background-color','green');
-	            				$( "#message" ).empty();
-	            				$("#submit").html('Descargado');
-	            			  }, 2000);
-	               }else if(data.result == "error"){
-            	     $( "#message" ).empty();
-            	     $("#username,#password").prop("disabled",false);
-            	     $( "#submit" ).prop( "disabled", false );	
-	    		     $('#submit').css('background-color','grey');
-	            	 $( "#submit" ).prop( "disabled", true );
-	            	 $("#submit").html('Login');
-					 $('#submit').css('background-color','#337ab7');
-					 $('#submit').css('color','#fff');
-					 $('#submit').css('border-color','#2e6da4');
-					 $( "#submit" ).prop( "disabled", false );
-					 $('#password').val('');
-					 $('<p>Credenciales incorrectas. Por favor intente de nuevo.</p>').appendTo('#message').css('color','red');
-	               }else if(data.result == "validate"){
-	            	   
-	            	   $("#username,#password").prop("disabled",true);
-	            	   $( "#submit" ).prop( "disabled", true );
-	            	   $("#submit").html('Cargando....');
-	            	   $( "#message" ).empty();
-	            	   $('<p>Sus datos están siendo procesados</p>').appendTo('#message').css('color','black');
-	            	   console.log("validate AD");
-	            	   //servicio de andres validate el ajax antiguo va aqui con la url 
-	            	   //aqui puedo validar el sql exeption o AD
-	                       var filename = $("#filename").val();
-	                       var username = $("#username").val();
-	                       var password = $("#password").val();
-	                       $.ajax({
-	                           method: "GET",
-	                           url: url,
-	                           dataType: "json"
-	                       }).done(function( data ) {
-	                           console.log( data );
-	                           if(data.username != null){
-	                               window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename=" + $("#filename").val());
-	                           }else{
-	                               $("#error").show();
-	                           }
-	                       });
-	               }else{
-	            	   // si no esta en el sql y tampoco en el AD que me tire este mensaje
-	            	   $('<p>Ocurrió un error durante el proceso; por favor, intente de nuevo</p>').appendTo('#message').css('color','red');
-	               }
-	            });
+  var errorFailedMessage = "Credenciales incorrectas. Por favor intente de nuevo";
+  var accessDenied = "EL usuario "+$("#username").val();+" no tiene permiso para descargar el archivo";
+  var emptyFields = "Se requiere datos para procesar la solicitud";
+  var validateAD = "Sus datos están siendo procesados";
+  var errorMessage = "Ocurrió un error durante el proceso; por favor, intente de nuevo";
+  
+ $("#submit").click(function() {
+	 $( "#message" ).empty();
+	  //var getuserurl = urlParams.user[0];
+      var filename = $("#filename").val();
+      var username = $("#username").val();
+      var urluser =  $("#urluser").val();
+      console.log($("#urluser").val());
+      console.log(username);
+      var password = $("#password").val();
+      if(username.trim() != "" && password.trim() != "") {
+    	  if(urluser == "user.jabber.default" || urluser === username){// valido url contra input
+    		  getFileAuhentication(username,password);
+    	  }else{
+    		  $('<p>'+accessDenied+'</p>').appendTo('#message').css('color','red');
+    	  }//fin if 2
+      }else{
+    	  $('<p>'+emptyFields+'</p>').appendTo('#message').css('color','red');
+      }// fin if 1
+ });//fin submit  
+ function getFileAuhentication(username,password){	
+		 //Datasys
+		      var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
+		  	  var userAuthenticationServiceURL =  "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
+		      //Guatemala
+		      //var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
+		  	//var userAuthenticationServiceURL =  "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
+        	$.ajax({
+             method: "GET",
+             url: userAuthenticationServiceURL,
+             dataType: "json"
+         }).done(function( data ) {
+             console.log( data );
+            if( data.result == "success"){
+             	$( "#submit" ).prop( "disabled", true );
+             	$("#submit").html('Descargando....');
+         	   console.log("success");
+               window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename=" + $("#filename").val());
+               setTimeout(
+         			  function() 
+         			  {
+         				$('#submit').css('background-color','green');
+         				$( "#message" ).empty();
+         				$("#submit").html('Descargado');
+         			  }, 2000);
+            }else if(data.result == "error"){
+        	     $("#username,#password").prop("disabled",false);
+        	     $( "#submit" ).prop( "disabled", false );	
+	 		     $('#submit').css('background-color','grey');
+	         	 $( "#submit" ).prop( "disabled", true );
+	         	 $("#submit").html('Login');
+				 $('#submit').css('background-color','#337ab7');
+				 $('#submit').css('color','#fff');
+				 $('#submit').css('border-color','#2e6da4');
+				 $( "#submit" ).prop( "disabled", false );
+				 $('#password').val('');
+				 $('<p>'+errorFailedMessage+'</p>').appendTo('#message').css('color','red');
+            }else if(data.result == "validate"){
+         	   $("#username,#password").prop("disabled",true);
+         	   $( "#submit" ).prop( "disabled", true );
+         	   $("#submit").html('Cargando....');
+         	   $( "#message" ).empty();
+         	   $('<p>'+ validateAD +'</p>').appendTo('#message').css('color','black');
+         	   console.log("validate AD");
+                    $.ajax({
+                        method: "GET",
+                        url: url,
+                        dataType: "json"
+                    }).done(function( data ) {
+                        console.log( data );
+                        if(data.username != null){
+                            console.log("dercarga");
+                            window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename="+filename);
+                        }else{
+                            $("#error").show();
+                        }
+                    });
             }else{
-            	 $("#username,#password").prop("disabled",false);
-            	   $( "#submit" ).prop( "disabled", true );
-            	$('<p>Por favor ingresar los datos requeridos.</p>').appendTo('#message').css('color','red');
+         	   $('<p>'+ errorMessage +'</p>').appendTo('#message').css('color','red');
             }
-        });
-    	
+         });
+            	}
+       
     </script>
 </body>
 </html>
