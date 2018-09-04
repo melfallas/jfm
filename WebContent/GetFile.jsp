@@ -90,12 +90,12 @@
       }// fin if 1
  });//fin submit  
  function getFileAuhentication(username,password){	
-		 //Datasys
-		      var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-		  	  var userAuthenticationServiceURL =  "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
-		      //Guatemala
-		      //var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-		      //var userAuthenticationServiceURL =  "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
+		 	//Servicios Datasys
+			var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
+			var userAuthenticationServiceURL =  "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
+			//Servicios Guatemala
+			//var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
+			//var userAuthenticationServiceURL =  "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
         	$.ajax({
              method: "GET",
              url: userAuthenticationServiceURL,

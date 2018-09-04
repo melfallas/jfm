@@ -32,7 +32,7 @@ public class UploadDownloadFileServlet extends HttpServlet {
     private static String JDBC_URL = CommonConstants.JDBC_URL;
     private static String USER = CommonConstants.DB_USER;
     private static String PASSWORD = CommonConstants.DB_PASSWORD;
-    private static String FOLDER_PATH = "/fileserver/archivos/server1/files/";
+    private static String FOLDER_PATH = CommonConstants.FOLDER_PATH;
     private ServletFileUpload uploader = null;
 
 	@Override

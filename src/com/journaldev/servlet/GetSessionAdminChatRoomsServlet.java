@@ -20,7 +20,7 @@ public class GetSessionAdminChatRoomsServlet extends HttpServlet {
     private static String JDBC_URL = CommonConstants.JDBC_URL;
     private static String USER = CommonConstants.DB_USER;
     private static String PASSWORD = CommonConstants.DB_PASSWORD;
-    private static String CHATROOMS_TABLE = CommonConstants.CHATROOMS_TABLE;
+    private static String CHATROOMS_TABLE = CommonConstants.ADMIN_CHATROOMS_TABLE;
 
     @Override
     public void init() throws ServletException {

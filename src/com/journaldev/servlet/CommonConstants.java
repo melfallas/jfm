@@ -11,8 +11,10 @@ public class CommonConstants {
   	public static String LOGIN_TABLE = "[compliancedb].[dbo].[jc_users]";
   	public static String MESSAGE_TABLE = "[compliancedb].[dbo].[jm]";
   	public static String CHATS_TABLE = "[compliancedb].[dbo].[jc_chats]";
-  	public static String CHATROOMS_TABLE = "[compliancedb].[dbo].[tc_rooms]";
+  	public static String CHATROOMS_TABLE = "[compliancedb].[dbo].[jc_chatrooms]";
+  	public static String ADMIN_CHATROOMS_TABLE = "[compliancedb].[dbo].[tc_rooms]";
   	public static String ROOT_PATH = "/home/soporte/fileserver";
+  	public static String FOLDER_PATH = "/home/soporte/fileserver/files/";
   	
   	
 	// Produccion - Guatemala
@@ -22,8 +24,10 @@ public class CommonConstants {
 //    public static String LOGIN_TABLE = "compliancedb.jabber.jc_users";
 //    public static String MESSAGE_TABLE = "[compliancedb].[dbo].[jm]";
 //    public static String CHATS_TABLE = "[compliancedb].[jabber].[jc_chats]";
-//	public static String CHATROOMS_TABLE = "[compliancedb].[dbo].[tc_rooms]";
+//    public static String CHATROOMS_TABLE = "[compliancedb].[jabber].[jc_chatrooms]";
+//	public static String ADMIN_CHATROOMS_TABLE = "[compliancedb].[dbo].[tc_rooms]";
 //	public static String ROOT_PATH = "/fileserver/archivos/server1";
+//	public static String FOLDER_PATH = "/fileserver/archivos/server1/files/";
 	
 	
 	// Comunes

@@ -37,9 +37,12 @@ public class GetSessionChatRoomsServlet extends HttpServlet {
             connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
             if(connObj != null) {
                 Statement statement = connObj.createStatement();
-                ResultSet results = statement.executeQuery("SELECT chatroom " +
+                String query = 
+                		"SELECT chatroom " +
                         "FROM " + CHATROOMS_TABLE +
-                        " WHERE username = '"+ username + "'");
+                        " WHERE username = '"+ username + "'"
+                        ;
+                ResultSet results = statement.executeQuery(query);
 
                 while(results.next()) {
                     obj = new JSONObject();
