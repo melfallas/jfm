@@ -74,11 +74,11 @@
 	 $( "#message" ).empty();
 	  //var getuserurl = urlParams.user[0];
       var filename = $("#filename").val();
-      var username = $("#username").val();
+      var user =  $("#username").val();
+      var pass =  $("#password").val();
       var urluser =  $("#urluser").val();
-      console.log($("#urluser").val());
-      console.log(username);
-      var password = $("#password").val();
+      var username = user.toLowerCase();
+      var password = pass.toLowerCase();
       if(username.trim() != "" && password.trim() != "") {
     	  getFileAuhentication(username,password);
       }else{
