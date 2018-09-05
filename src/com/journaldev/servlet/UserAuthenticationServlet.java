@@ -25,6 +25,7 @@ public class UserAuthenticationServlet extends HttpServlet {
     private static String PASSWORD = CommonConstants.DB_PASSWORD;
     private static String SP_COUNT_VALUE = CommonConstants.SP_COUNT_VALUE;
     private static String SP_USER_CREDENTIALS = CommonConstants.SP_USER_CREDENTIALS;
+    private static String FILE_URL = CommonConstants.FILE_SERVER_DOWNLOAD;
 	
     @Override
     public void init() throws ServletException {
@@ -39,15 +40,14 @@ public class UserAuthenticationServlet extends HttpServlet {
         String filename = request.getParameter("filename");
         JSONObject obj = new JSONObject();
         Set<String> userList = new HashSet<String>();
-        String url = "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/GetFile?filename="+filename;
-        String query = "SELECT "+
-				"LOWER(SUBSTRING(to_jid, 0, CHARINDEX('@', to_jid))) AS toUser"+
-				",LOWER(SUBSTRING(from_jid, 0, CHARINDEX('@', from_jid))) AS fromUser" +
-				" FROM [dbo].[jm]"+
-				" WHERE "+
-				" body_string ='"+url+"' and direction = 'O'"+ 
-				" ORDER BY [sent_date] DESC";
         
+        String url = FILE_URL+ filename;
+
+        String query = " SELECT DISTINCT "+
+        "LOWER(SUBSTRING(to_jid, 0, CHARINDEX('@', to_jid))) AS toUser"+
+		",LOWER(SUBSTRING(from_jid, 0, CHARINDEX('@', from_jid))) AS fromUser" +
+       " FROM [dbo].[jm] "+
+       " WHERE  body_string ='"+url+"'";
         try {
         	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
@@ -62,6 +62,7 @@ public class UserAuthenticationServlet extends HttpServlet {
                 	 userList.add(results.getString("toUser"));
                 	 userList.add(results.getString("fromUser"));
                 }
+                
                 if(!userList.contains(webChatUser)){
                	 
                	 obj.put("result", "denied");

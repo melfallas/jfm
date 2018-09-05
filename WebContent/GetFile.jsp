@@ -81,15 +81,7 @@
       var password = $("#password").val();
       if(username.trim() != "" && password.trim() != "") {
     	  getFileAuhentication(username,password);
-    	  /*
-    	  if(urluser == "user.jabber.default" || urluser === username){// valido url contra input
-    		  getFileAuhentication(username,password);
-    	  }else{
-    		  $('<p>'+accessDenied+'</p>').appendTo('#message').css('color','red');
-    	  }//fin if 2
-    	  */
       }else{
-    	  getFileAuhentication(username,password);
     	  $('<p>'+emptyFields+'</p>').appendTo('#message').css('color','red');
       }// fin if 1
  });//fin submit  
@@ -121,6 +113,7 @@
          				$("#submit").html('Descargado');
          			  }, 2000);
             }else if(data.result == "error"){
+            	 $( "#message" ).empty();
         	     $("#username,#password").prop("disabled",false);
         	     $( "#submit" ).prop( "disabled", false );	
 	 		     $('#submit').css('background-color','grey');
@@ -133,6 +126,7 @@
 				 $('#password').val('');
 				 $('<p>'+errorFailedMessage+'</p>').appendTo('#message').css('color','red');
             }else if(data.result == "validate"){
+            	 $( "#message" ).empty();
          	   $("#username,#password").prop("disabled",true);
          	   $( "#submit" ).prop( "disabled", true );
          	   $("#submit").html('Cargando....');
@@ -153,6 +147,7 @@
                         }
                     });
             }else{
+            	 $( "#message" ).empty();
          	   $('<p>'+ errorMessage +'</p>').appendTo('#message').css('color','red');
             }
          });
