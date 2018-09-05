@@ -25,7 +25,6 @@ public class UserAuthenticationServlet extends HttpServlet {
     private static String PASSWORD = CommonConstants.DB_PASSWORD;
     private static String SP_COUNT_VALUE = CommonConstants.SP_COUNT_VALUE;
     private static String SP_USER_CREDENTIALS = CommonConstants.SP_USER_CREDENTIALS;
-    private static String FILE_URL = CommonConstants.FILE_SERVER_DOWNLOAD;
 	
     @Override
     public void init() throws ServletException {
@@ -41,7 +40,7 @@ public class UserAuthenticationServlet extends HttpServlet {
         JSONObject obj = new JSONObject();
         Set<String> userList = new HashSet<String>();
         
-        String url = FILE_URL+ filename;
+        String url = CommonConstants.FILE_SERVER_DOWNLOAD + filename;
 
         String query = " SELECT DISTINCT "+
         "LOWER(SUBSTRING(to_jid, 0, CHARINDEX('@', to_jid))) AS toUser"+
@@ -62,46 +61,42 @@ public class UserAuthenticationServlet extends HttpServlet {
                 	 userList.add(results.getString("toUser"));
                 	 userList.add(results.getString("fromUser"));
                 }
-                
+                // Verificar si el usuario tiene permiso para descargar el archivo
                 if(!userList.contains(webChatUser)){
-               	 
-               	 obj.put("result", "denied");
-                	 System.out.println("denied");
-                }else{
-               	 
-               	 obj.put("result", "granted");
-               	 System.out.println("granted");
-					 
-                
-            	CallableStatement cstmt = connObj.prepareCall("exec "+SP_COUNT_VALUE+" ?");
-                cstmt.setString(1, webChatUser);
-                cstmt.execute();
-                final ResultSet rs = cstmt.getResultSet();
-                 if (rs.next()) {
-                	 int  countValue = rs.getInt(1);
-                	 //System.out.println("Value from first result set = " + countValue); 
-                	 if(countValue > 0){
-                	     CallableStatement cStmt2 = connObj.prepareCall("{call "+SP_USER_CREDENTIALS+"(?,?)}");
-                	     cStmt2.setString(1, webChatUser);
-                	     cStmt2.setString(2, password);
-                	     cStmt2.execute();
-                	     // Process all returned result sets 
-                         final ResultSet rs2 = cStmt2.getResultSet();
-                         if (rs2.next()) {
-                        	 UserParameterDB = rs2.getString("JWU_WebChatUser");
-                        	 passParameterDB= rs2.getString("JWU_WebChatPassword");
-                        	 if(webChatUser.equals(UserParameterDB)  && password.equals(passParameterDB)){
-	                    		 obj.put("result", "success");
-                        	 }
-                         }
-                         else{ 
-                        	 obj.put("result", "error");
-                    	 }
-                	 }else{
-                		 // Si el count es 0 se envía result = validate para autenticar con AD
-                		 obj.put("result", "validate");
-                	 }
-                 }
+                	obj.put("result", "denied");
+                	//System.out.println("denied");
+                }else {
+               	 	obj.put("result", "granted");
+               	 	//System.out.println("granted");
+	            	CallableStatement cstmt = connObj.prepareCall("exec "+SP_COUNT_VALUE+" ?");
+	                cstmt.setString(1, webChatUser);
+	                cstmt.execute();
+	                final ResultSet rs = cstmt.getResultSet();
+	                 if (rs.next()) {
+	                	 int  countValue = rs.getInt(1);
+	                	 //System.out.println("Value from first result set = " + countValue); 
+	                	 if(countValue > 0){
+	                	     CallableStatement cStmt2 = connObj.prepareCall("{call "+SP_USER_CREDENTIALS+"(?,?)}");
+	                	     cStmt2.setString(1, webChatUser);
+	                	     cStmt2.setString(2, password);
+	                	     cStmt2.execute();
+	                	     // Process all returned result sets 
+	                         final ResultSet rs2 = cStmt2.getResultSet();
+	                         if (rs2.next()) {
+	                        	 UserParameterDB = rs2.getString("JWU_WebChatUser");
+	                        	 passParameterDB= rs2.getString("JWU_WebChatPassword");
+	                        	 if(webChatUser.equals(UserParameterDB)  && password.equals(passParameterDB)){
+		                    		 obj.put("result", "success");
+	                        	 }
+	                         }
+	                         else{ 
+	                        	 obj.put("result", "error");
+	                    	 }
+	                	 }else{
+	                		 // Si el count es 0 se envía result = validate para autenticar con AD
+	                		 obj.put("result", "validate");
+	                	 }
+	                 }
                 }
             }   	 
         } catch(Exception sqlException) {

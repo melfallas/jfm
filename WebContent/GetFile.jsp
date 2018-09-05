@@ -33,7 +33,7 @@
 
                 <br>
 
-                <button id="submit" class="btn btn-primary">Login</button>
+                <button id="submit" class="btn btn-primary">Iniciar descarga</button>
             </div>
         </div>
     </div>
@@ -71,6 +71,8 @@
   var validateAD = "Sus datos están siendo procesados";
   var errorMessage = "Ocurrió un error durante el proceso; por favor, intente de nuevo";
  $("#submit").click(function() {
+	 $( "#submit" ).prop( "disabled", true);
+	$("#submit").html('Por favor espere...');
 	 $( "#message" ).empty();
 	  //var getuserurl = urlParams.user[0];
       var filename = $("#filename").val();
@@ -78,23 +80,31 @@
       var pass =  $("#password").val();
       var urluser =  $("#urluser").val();
       var username = user.toLowerCase();
-      var password = pass.toLowerCase();
+      var password = pass;
       if(username.trim() != "" && password.trim() != "") {
     	  getFileAuhentication(username,password);
       }else{
     	  $('<p>'+emptyFields+'</p>').appendTo('#message').css('color','red');
+    	  $("#submit").html('Iniciar descarga');
+		 $('#submit').css('background-color','#337ab7');
+		 $('#submit').css('color','#fff');
+		 $('#submit').css('border-color','#2e6da4');
+		 $( "#submit" ).prop( "disabled", false);
       }// fin if 1
  });//fin submit  
- function getFileAuhentication(username,password){	
+ function getFileAuhentication(username,password) {
+	 		var filename = $("#filename").val();
+	 
 		 	//Servicios Datasys
-		    var filename = $("#filename").val();
 			var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
+			var userAuthenticationServiceURL = "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+filename+"";
+			//var userAuthenticationServiceURL = "http://localhost:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+filename+"";
 			
-			 var userAuthenticationServiceURL = "http://localhost:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+filename+"";//var userAuthenticationServiceURL =  "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
 			//Servicios Guatemala
 			//var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-			//var userAuthenticationServiceURL =  "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
-        	$.ajax({
+			//var userAuthenticationServiceURL = "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+filename+"";
+        	
+			$.ajax({
              method: "GET",
              url: userAuthenticationServiceURL,
              dataType: "json"
@@ -112,20 +122,36 @@
          				$( "#message" ).empty();
          				$("#submit").html('Descargado');
          			  }, 2000);
-            }else if(data.result == "error"){
+            }
+            else if(data.result == "error"){
             	 $( "#message" ).empty();
         	     $("#username,#password").prop("disabled",false);
         	     $( "#submit" ).prop( "disabled", false );	
 	 		     $('#submit').css('background-color','grey');
 	         	 $( "#submit" ).prop( "disabled", true );
-	         	 $("#submit").html('Login');
+	         	 $("#submit").html('Iniciar descarga');
 				 $('#submit').css('background-color','#337ab7');
 				 $('#submit').css('color','#fff');
 				 $('#submit').css('border-color','#2e6da4');
 				 $( "#submit" ).prop( "disabled", false );
 				 $('#password').val('');
 				 $('<p>'+errorFailedMessage+'</p>').appendTo('#message').css('color','red');
-            }else if(data.result == "validate"){
+            }
+            else if(data.result == "denied"){
+           	 $( "#message" ).empty();
+       	     $("#username,#password").prop("disabled",false);
+       	     $( "#submit" ).prop( "disabled", false );	
+	 		     $('#submit').css('background-color','grey');
+	         	 $( "#submit" ).prop( "disabled", true );
+	         	 $("#submit").html('Iniciar descarga');
+				 $('#submit').css('background-color','#337ab7');
+				 $('#submit').css('color','#fff');
+				 $('#submit').css('border-color','#2e6da4');
+				 $( "#submit" ).prop( "disabled", false);
+				 $('#password').val('');
+				 $('<p>'+accessDenied+'</p>').appendTo('#message').css('color','red');
+           }
+            else if(data.result == "validate"){
             	 $( "#message" ).empty();
          	   $("#username,#password").prop("disabled",true);
          	   $( "#submit" ).prop( "disabled", true );
