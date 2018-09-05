@@ -80,19 +80,25 @@
       console.log(username);
       var password = $("#password").val();
       if(username.trim() != "" && password.trim() != "") {
+    	  getFileAuhentication(username,password);
+    	  /*
     	  if(urluser == "user.jabber.default" || urluser === username){// valido url contra input
     		  getFileAuhentication(username,password);
     	  }else{
     		  $('<p>'+accessDenied+'</p>').appendTo('#message').css('color','red');
     	  }//fin if 2
+    	  */
       }else{
+    	  getFileAuhentication(username,password);
     	  $('<p>'+emptyFields+'</p>').appendTo('#message').css('color','red');
       }// fin if 1
  });//fin submit  
  function getFileAuhentication(username,password){	
 		 	//Servicios Datasys
+		    var filename = $("#filename").val();
 			var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-			var userAuthenticationServiceURL =  "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
+			
+			 var userAuthenticationServiceURL = "http://localhost:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+filename+"";//var userAuthenticationServiceURL =  "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";
 			//Servicios Guatemala
 			//var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
 			//var userAuthenticationServiceURL =  "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"";

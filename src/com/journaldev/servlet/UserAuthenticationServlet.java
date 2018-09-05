@@ -12,6 +12,8 @@ import java.awt.geom.RectangularShape;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @WebServlet("/UserAuthenticationServlet")
 public class UserAuthenticationServlet extends HttpServlet {
@@ -34,11 +36,42 @@ public class UserAuthenticationServlet extends HttpServlet {
         String password = request.getParameter("pass");
         String UserParameterDB;
         String passParameterDB;
+        String filename = request.getParameter("filename");
         JSONObject obj = new JSONObject();
+        Set<String> userList = new HashSet<String>();
+        String url = "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/GetFile?filename="+filename;
+        String query = "SELECT "+
+				"LOWER(SUBSTRING(to_jid, 0, CHARINDEX('@', to_jid))) AS toUser"+
+				",LOWER(SUBSTRING(from_jid, 0, CHARINDEX('@', from_jid))) AS fromUser" +
+				" FROM [dbo].[jm]"+
+				" WHERE "+
+				" body_string ='"+url+"' and direction = 'O'"+ 
+				" ORDER BY [sent_date] DESC";
+        
         try {
         	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
             if(connObj != null) {
+            	
+            	// mandar nuevo codigo 
+           	 	Statement statement = connObj.createStatement();
+                ResultSet results = statement.executeQuery(query);
+                
+                while(results.next()) {
+                	 obj = new JSONObject();
+                	 userList.add(results.getString("toUser"));
+                	 userList.add(results.getString("fromUser"));
+                }
+                if(!userList.contains(webChatUser)){
+               	 
+               	 obj.put("result", "denied");
+                	 System.out.println("denied");
+                }else{
+               	 
+               	 obj.put("result", "granted");
+               	 System.out.println("granted");
+					 
+                
             	CallableStatement cstmt = connObj.prepareCall("exec "+SP_COUNT_VALUE+" ?");
                 cstmt.setString(1, webChatUser);
                 cstmt.execute();
@@ -68,6 +101,7 @@ public class UserAuthenticationServlet extends HttpServlet {
                 		 obj.put("result", "validate");
                 	 }
                  }
+                }
             }   	 
         } catch(Exception sqlException) {
    		 	obj.put("result", "success");
