@@ -159,19 +159,23 @@
          	   $( "#message" ).empty();
          	   $('<p>'+ validateAD +'</p>').appendTo('#message').css('color','black');
          	   console.log("validate AD");
-                    $.ajax({
-                        method: "GET",
-                        url: url,
-                        dataType: "json"
-                    }).done(function( data ) {
-                        console.log( data );
-                        if(data.username != null){
-                            console.log("dercarga");
-                            window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename="+filename);
-                        }else{
-                            $("#error").show();
-                        }
-                    });
+         	  	$.ajax({
+              	   type : "GET",
+              	   url : url,
+              	   success : function(data){
+              	   	alert('success');
+              	   },
+              	   timeout: 1000,  
+              	   error: function(request, status, err) {
+              	        if (status == "timeout") {
+              	        	//resetLoginForm();
+              	    	 	$('<p>' + 'Se agotó el tiempo en espera. Por favor intente de nuevo' + '</p>').appendTo('#message').css('color','red');
+              	        } else {
+              	            // another error occured  
+              	            //alert("error: " + request + status + err);
+              	        }
+              	    }
+              	  });
             }else{
             	 $( "#message" ).empty();
          	   $('<p>'+ errorMessage +'</p>').appendTo('#message').css('color','red');
