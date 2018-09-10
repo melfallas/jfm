@@ -98,12 +98,14 @@
 		 	//Servicios Datasys
 			var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
 			var userAuthenticationServiceURL = "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+filename+"";
-			//var userAuthenticationServiceURL = "http://localhost:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+filename+"";
+			var userAuthenticationServiceURL = "http://localhost:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+filename+"";
+			var urlUserLogin = "http://172.31.251.11:8080/JabberFileManager/LoginServlet?system=temp&username=temp&jusername="+$("#username").val()+"&jpassword="+$("#password").val()+"";
 			
 			//Servicios Guatemala
-			//var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-			//var userAuthenticationServiceURL = "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+filename+"";
-        	
+// 			var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
+// 			var userAuthenticationServiceURL = "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+filename+"";
+// 			var urlUserLogin = "http:///mp-fsapp01.mp.gob.gt:8080/JabberFileManager/LoginServlet?system=temp&username=temp&jusername="+$("#username").val()+"&jpassword="+$("#password").val()+"";
+		  
 			$.ajax({
              method: "GET",
              url: userAuthenticationServiceURL,
@@ -152,7 +154,7 @@
 				 $('<p>'+accessDenied+'</p>').appendTo('#message').css('color','red');
            }
             else if(data.result == "validate"){
-            	 $( "#message" ).empty();
+               $( "#message" ).empty();
          	   $("#username,#password").prop("disabled",true);
          	   $( "#submit" ).prop( "disabled", true );
          	   $("#submit").html('Cargando....');
@@ -164,16 +166,31 @@
               	   url : url,
               	   success : function(data){
               	   	alert('success');
+              	  window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename=" + $("#filename").val());
               	   },
-              	   timeout: 1000,  
+              	   timeout: 5000,  
               	   error: function(request, status, err) {
               	        if (status == "timeout") {
-              	        	//resetLoginForm();
-              	    	 	$('<p>' + 'Se agotó el tiempo en espera. Por favor intente de nuevo' + '</p>').appendTo('#message').css('color','red');
-              	        } else {
-              	            // another error occured  
-              	            //alert("error: " + request + status + err);
-              	        }
+              	     	$.ajax({
+                       	   type : "POST",
+                       	   url : urlUserLogin,
+                       	   success : function(data){
+                       		 $( "#message" ).empty();
+              	        	 $("#username,#password").prop("disabled",false);
+              	        	$('#password').val('');
+                       	   	 $( "#submit" ).prop( "disabled", false );
+                       	  	 $("#submit").html('Cargando....');
+              	        	 $('<p>' + 'Se agotó el tiempo en espera. Por favor intente de nuevo' + '</p>').appendTo('#message').css('color','red');
+                       	   //	alert('success');
+                       	   		//resetLoginForm();
+                       	   }, 
+                       	   error: function(request, status, err) {
+                       	        //error
+                       	         $('<p>' + 'Por favor intente de nuevo' + '</p>').appendTo('#message').css('color','red');
+                       		//alert('ERROR');
+                       	    }
+                       	  });
+              	        }   
               	    }
               	  });
             }else{
