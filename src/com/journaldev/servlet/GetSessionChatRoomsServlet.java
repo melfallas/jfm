@@ -104,9 +104,9 @@ public class GetSessionChatRoomsServlet extends HttpServlet {
                     stmt.executeUpdate();
                 }else{
                     if(action.equals("delete")){
-                        PreparedStatement stmt = connObj.prepareStatement("DELETE FROM " + CHATROOMS_TABLE + " WHERE username = ? AND chatroom = ?");
+                        PreparedStatement stmt = connObj.prepareStatement("DELETE FROM " + CHATROOMS_TABLE + " WHERE username = ? AND chatroomid = ?");
                         stmt.setString(1,username);
-                        stmt.setString(2,chatroom);
+                        stmt.setString(2,chatroomid);
                         stmt.executeUpdate();
                     }
                 }
