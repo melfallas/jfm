@@ -71,6 +71,7 @@ public class GetSessionChatRoomsServlet extends HttpServlet {
         String chatroom = request.getParameter("chatroom");
         String username = request.getParameter("username");
         String action = request.getParameter("action");
+        String chatroomid = request.getParameter("chatroomid");
         JSONObject obj = null;
 
         try {
@@ -78,10 +79,19 @@ public class GetSessionChatRoomsServlet extends HttpServlet {
             connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
             if(connObj != null) {
                 Statement statement = connObj.createStatement();
+              
+                /*
                 ResultSet results = statement.executeQuery("SELECT  chatroom " +
                         "FROM " + CHATROOMS_TABLE +
                         " WHERE username = '"+ username + "' AND chatroom = '" + chatroom + "'");
-
+                */
+                
+                String query = "SELECT  chatroom " +
+                        "FROM " + CHATROOMS_TABLE +
+                        " WHERE username = '"+ username + "' AND chatroomid = '" + chatroomid + "'";
+                
+                ResultSet results = statement.executeQuery(query);
+                
                 while(results.next()) {
                     obj = new JSONObject();
                     obj.put("chatroom", results.getString("chatroom"));
