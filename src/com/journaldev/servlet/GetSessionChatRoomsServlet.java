@@ -98,9 +98,10 @@ public class GetSessionChatRoomsServlet extends HttpServlet {
                 }
 
                 if(obj == null){
-                    PreparedStatement stmt = connObj.prepareStatement("INSERT INTO " + CHATROOMS_TABLE + " (username, chatroom) VALUES (?, ?)");
+                    PreparedStatement stmt = connObj.prepareStatement("INSERT INTO " + CHATROOMS_TABLE + " (username, chatroom,chatroomid) VALUES (?, ?, ?)");
                     stmt.setString(1, username);
                     stmt.setString(2, chatroom);
+                    stmt.setString(3, chatroomid);
                     stmt.executeUpdate();
                 }else{
                     if(action.equals("delete")){
