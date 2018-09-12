@@ -33,9 +33,31 @@ public class GetSessionMessagesServlet extends HttpServlet {
         System.out.println(session);
         JSONObject obj;
         JSONArray array = new JSONArray();
+        String from_jid;
+        String to_jid;
+        
         if(session.split("/").length > 1){
-            String from_jid = session.split("/")[0];
-            String to_jid = session.split("/")[1];
+             from_jid = session.split("/")[0];
+             to_jid = session.split("/")[1];
+            
+            if ( from_jid.toLowerCase().indexOf("@".toLowerCase()) != -1){
+          	  String fromUser_jid = from_jid;
+                int firstUser = fromUser_jid.indexOf('@');
+                fromUser_jid = fromUser_jid.substring(0,firstUser);
+                from_jid =fromUser_jid;
+          }
+          	 if(to_jid.toLowerCase().indexOf("@".toLowerCase()) != -1) {
+          		 
+          		 String fromTo_jid = to_jid;
+                   int secondUser = fromTo_jid.indexOf('@');
+                   fromTo_jid = fromTo_jid.substring(0,secondUser);
+                   
+                   to_jid = fromTo_jid;
+          	 }
+           
+            
+           
+            
             try {
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                 connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
@@ -69,7 +91,6 @@ public class GetSessionMessagesServlet extends HttpServlet {
                     				" ORDER BY CONVERT (char(10), t.sent_date, 103) ASC;";
                 	
                 	*/
-                	
                 	
                     // ESTA VERSION ES PARA SQL 2012 LTRIM
                     String query = 
