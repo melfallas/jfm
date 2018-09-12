@@ -33,18 +33,16 @@ public class GetSessionMessagesServlet extends HttpServlet {
         System.out.println(session);
         JSONObject obj;
         JSONArray array = new JSONArray();
-
         if(session.split("/").length > 1){
             String from_jid = session.split("/")[0];
             String to_jid = session.split("/")[1];
-
             try {
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                 connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
                 if(connObj != null) {
 
                 	Statement statement = connObj.createStatement();
-                    
+                    /*
                     String query = 
                     		"SELECT  sent_date, to_jid, from_jid, body_string " +
                             "FROM "+ MESSAGE_TABLE +
@@ -52,9 +50,40 @@ public class GetSessionMessagesServlet extends HttpServlet {
                             + "((to_jid LIKE '%" + to_jid + "%' AND from_jid LIKE '%" + from_jid + "%') " 
                             + " OR (to_jid LIKE '%" + from_jid + "%' AND from_jid LIKE '%" + to_jid + "%')) "
                     		+ "AND direction = 'O'"
-                            + " ORDER BY [sent_date] ASC"
-                    ;
-                    
+                            + " ORDER BY  CONVERT (char(10), sent_date, 103) ASC";
+                    */
+                	
+        
+                    // ESTA VERSION ES PARA SQL 2017 LTRIM
+                	/*
+                    String query = 
+                    				" SELECT sent_date, from_jid , body_string FROM(" +
+                    				" SELECT sent_date, to_jid, from_jid, body_string FROM [compliancedb].[dbo].[jm] (NOLOCK) " +
+                    				" WHERE (TRIM (SUBSTRING(to_jid,0,CHARINDEX('@',to_jid))) LIKE '"+to_jid+"' AND TRIM(SUBSTRING(from_jid,0,CHARINDEX('@',from_jid))) LIKE '"+from_jid+"') " +
+                    				" AND direction = 'O'" +
+                    				" UNION " +
+                    				"SELECT sent_date, to_jid, from_jid, body_string FROM [compliancedb].[dbo].[jm] (NOLOCK)" +
+                    				" WHERE (TRIM(SUBSTRING(to_jid,0,CHARINDEX('@',to_jid))) LIKE '"+to_jid+"' AND TRIM(SUBSTRING(from_jid,0,CHARINDEX('@',from_jid))) LIKE '"+from_jid+"') " +
+                    				" AND direction = 'O'" +
+                    				" ) t" +
+                    				" ORDER BY CONVERT (char(10), t.sent_date, 103) ASC;";
+                	
+                	*/
+                	
+                	
+                    // ESTA VERSION ES PARA SQL 2012 LTRIM
+                    String query = 
+                    				" SELECT sent_date, from_jid , body_string FROM(" +
+                    				" SELECT sent_date, to_jid, from_jid, body_string FROM [compliancedb].[dbo].[jm] (NOLOCK) " +
+                    				" WHERE (LTRIM (SUBSTRING(to_jid,0,CHARINDEX('@',to_jid))) LIKE '"+to_jid+"' AND LTRIM(SUBSTRING(from_jid,0,CHARINDEX('@',from_jid))) LIKE '"+from_jid+"') " +
+                    				" AND direction = 'O'" +
+                    				" UNION " +
+                    				"SELECT sent_date, to_jid, from_jid, body_string FROM [compliancedb].[dbo].[jm] (NOLOCK)" +
+                    				" WHERE (LTRIM(SUBSTRING(to_jid,0,CHARINDEX('@',to_jid))) LIKE '"+to_jid+"' AND LTRIM(SUBSTRING(from_jid,0,CHARINDEX('@',from_jid))) LIKE '"+from_jid+"') " +
+                    				" AND direction = 'O'" +
+                    				" ) t" +
+                    				" ORDER BY CONVERT (char(10), t.sent_date, 103) ASC;";
+
                     ResultSet results = statement.executeQuery(query);
                     /*
                     ResultSet results = statement.executeQuery("SELECT  sent_date, to_jid, from_jid, body_string " +
