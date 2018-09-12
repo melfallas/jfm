@@ -101,7 +101,7 @@ public class GetSessionMessagesServlet extends HttpServlet {
                     + " WHERE (LTRIM(SUBSTRING(to_jid,0,CHARINDEX('@',to_jid))) LIKE '"+to_jid+"' "
                     + " AND LTRIM(SUBSTRING(from_jid,0,CHARINDEX('@',from_jid))) LIKE '"+from_jid+"') "
                     + " AND direction = 'O' "
-                    + ") t ORDER BY t.sent_date desc";
+                    + ") t ORDER BY t.sent_date ASC";
 
                     ResultSet results = statement.executeQuery(query);
                     /*
