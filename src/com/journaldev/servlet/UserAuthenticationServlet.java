@@ -86,8 +86,11 @@ public class UserAuthenticationServlet extends HttpServlet {
 	                        	 UserParameterDB = rs2.getString("JWU_WebChatUser");
 	                        	 passParameterDB= rs2.getString("JWU_WebChatPassword");
 	                        	 if(webChatUser.equals(UserParameterDB)  && password.equals(passParameterDB)){
+	                        		 
 		                    		 obj.put("result", "success");
-	                        	 }
+	                        	 }else{ 
+		                        	 obj.put("result", "error");
+		                    	 }
 	                         }
 	                         else{ 
 	                        	 obj.put("result", "error");
