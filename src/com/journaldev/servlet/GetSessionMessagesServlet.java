@@ -75,34 +75,61 @@ public class GetSessionMessagesServlet extends HttpServlet {
         
                     // ESTA VERSION ES PARA SQL 2017 TRIM
                 	/*
-                    String query =   "  SELECT sent_date, to_jid, from_jid, body_string FROM( "
-                    + " SELECT sent_date, to_jid, from_jid, body_string FROM [compliancedb].[dbo].[jm] (NOLOCK) "
-                    + "  WHERE (TRIM (SUBSTRING(to_jid,0,CHARINDEX('@',to_jid))) LIKE '"+to_jid+"' AND TRIM(SUBSTRING(from_jid,0,CHARINDEX('@',from_jid))) LIKE '"+from_jid+"') "
-                    + " AND direction = 'O' "
-                    + " UNION "
-                    + " SELECT sent_date, to_jid, from_jid, body_string FROM [compliancedb].[dbo].[jm] (NOLOCK)"
-                    + " WHERE (TRIM(SUBSTRING(to_jid,0,CHARINDEX('@',to_jid))) LIKE '"+to_jid+"' "
-                    + " AND TRIM(SUBSTRING(from_jid,0,CHARINDEX('@',from_jid))) LIKE ''"+from_jid+"') "
-                    + " AND direction = 'O' "
-                    + ") t ORDER BY t.sent_date desc";
+                    String query =  
+                    
+                    " SELECT sent_date, to_jid, from_jid, body_string " +
+                    " FROM ( " +
+                    " SELECT sent_date, to_jid, from_jid, body_string " +
+                    " FROM [compliancedb].[dbo].[jm] (NOLOCK) " +
+                    " WHERE ( " +
+                    " TRIM (SUBSTRING(to_jid,0, CHARINDEX('@',to_jid))) = '"+to_jid+"'  " +
+                    " AND TRIM(SUBSTRING(from_jid, 0, CHARINDEX('@', from_jid))) = '"+from_jid+"' " +
+                    " ) " +
+                    " AND direction = 'O' " +
+                    " AND body_string <> '' " +
+                    " UNION" +
+                    " SELECT sent_date, to_jid, from_jid, body_string " +
+                    " FROM [compliancedb].[dbo].[jm] (NOLOCK) " +
+                    " WHERE ( " +
+                    " TRIM (SUBSTRING(to_jid,0, CHARINDEX('@',to_jid))) = '"+to_jid+"'  " +
+                    " AND TRIM(SUBSTRING(from_jid, 0, CHARINDEX('@', from_jid))) = '"+from_jid+"' " +
+                    " ) " +
+                    " AND direction = 'O' " +
+                    " AND body_string <> '' " +
+                    " ) AS C " +
+                    " ORDER BY C.sent_date ASC ";
                 	
                 	*/
                 	
-                    // ESTA VERSION ES PARA SQL 2012 LTRIM
-    
-                    String query =
+                    // ESTA VERSION ES PARA SQL 2012 LTRIM          
                     
-                    "  SELECT sent_date, to_jid, from_jid, body_string FROM( "
-                    + " SELECT sent_date, to_jid, from_jid, body_string FROM [compliancedb].[dbo].[jm] (NOLOCK) "
-                    + "  WHERE (LTRIM (SUBSTRING(to_jid,0,CHARINDEX('@',to_jid))) LIKE '"+to_jid+"' AND LTRIM(SUBSTRING(from_jid,0,CHARINDEX('@',from_jid))) LIKE '"+from_jid+"') "
-                    + " AND direction = 'O' "
-                    + " UNION "
-                    + " SELECT sent_date, to_jid, from_jid, body_string FROM [compliancedb].[dbo].[jm] (NOLOCK)"
-                    + " WHERE (LTRIM(SUBSTRING(to_jid,0,CHARINDEX('@',to_jid))) LIKE '"+to_jid+"' "
-                    + " AND LTRIM(SUBSTRING(from_jid,0,CHARINDEX('@',from_jid))) LIKE '"+from_jid+"') "
-                    + " AND direction = 'O' "
-                    + ") t ORDER BY t.sent_date ASC";
-
+                	String query = 
+                    " SELECT sent_date, to_jid, from_jid, body_string " +
+                    " FROM ( " +
+                    " SELECT sent_date, to_jid, from_jid, body_string " +
+                    " FROM [compliancedb].[dbo].[jm] (NOLOCK) " +
+                    " WHERE ( " +
+                    " LTRIM (SUBSTRING(to_jid,0, CHARINDEX('@',to_jid))) = '"+to_jid+"'  " +
+                    " AND LTRIM(SUBSTRING(from_jid, 0, CHARINDEX('@', from_jid))) = '"+from_jid+"' " +
+                    " ) " +
+                    " AND direction = 'O' " +
+                    " AND body_string <> '' " +
+                    " UNION" +
+                    " SELECT sent_date, to_jid, from_jid, body_string " +
+                    " FROM [compliancedb].[dbo].[jm] (NOLOCK) " +
+                    " WHERE ( " +
+                    " LTRIM (SUBSTRING(to_jid,0, CHARINDEX('@',to_jid))) = '"+to_jid+"'  " +
+                    " AND LTRIM(SUBSTRING(from_jid, 0, CHARINDEX('@', from_jid))) = '"+from_jid+"' " +
+                    " ) " +
+                    " AND direction = 'O' " +
+                    " AND body_string <> '' " +
+                    " ) AS C " +
+                    " ORDER BY C.sent_date ASC ";
+                    
+                    
+                    
+                    
+                    
                     ResultSet results = statement.executeQuery(query);
                     /*
                     ResultSet results = statement.executeQuery("SELECT  sent_date, to_jid, from_jid, body_string " +
