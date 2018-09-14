@@ -20,34 +20,34 @@ public class LoginServlet extends HttpServlet {
     private static String USER = CommonConstants.DB_USER;
     private static String PASSWORD = CommonConstants.DB_PASSWORD;
     private static String LOGIN_TABLE = CommonConstants.LOGIN_TABLE;
-    private static String SP_DOGET = CommonConstants.SP_DOGET;
-    private static String SP_DOPOST = CommonConstants.SP_DOPOST;
 
+    
     @Override
     public void init() throws ServletException {
         //Initialize Servlet
     }
-    /*
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String system = request.getParameter("system");
-        String sysUsername = request.getParameter("username");
+        String sysUsername = request.getParameter("username").toLowerCase();
         JSONObject obj = new JSONObject();
         try {
         	  Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
               connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
               if(connObj != null) { 
-            	  CallableStatement cStmt = connObj.prepareCall("{call "+SP_DOGET+"(?)}");  
+            	  CallableStatement cStmt = connObj.prepareCall("{call "+ CommonConstants.JWU_GetWebChatUser+"(?, ?)}");  
             	  cStmt.setString(1, sysUsername); 
+            	  cStmt.setString(2, system); 
+            	  
             	// Process all returned result sets  
                   cStmt.execute();    
                   final ResultSet rs = cStmt.getResultSet();
                   while (rs.next()) {
-                	  System.out.println("Cadena de caracteres pasada como parametro de entrada="+rs.getString("NombreUsuario"));
+                	  System.out.println("Cadena de caracteres pasada como parametro de entrada="+rs.getString("chatUser"));
                 	  obj = new JSONObject();
-                      obj.put("username", rs.getString("Sistema"));
-                      obj.put("password", rs.getString("LOCK"));
+                      obj.put("username", rs.getString("chatUser"));
+                      obj.put("password", rs.getString("chatPass"));
 				}
-              	//System.out.println("Este es el doGet"); 
               }
         	
         } catch(Exception sqlException) {
@@ -62,8 +62,8 @@ public class LoginServlet extends HttpServlet {
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String systemName = request.getParameter("system");
-        String systemUsername = request.getParameter("username");
-        String username = request.getParameter("jusername");
+        String systemUsername = request.getParameter("username").toLowerCase();
+        String username = request.getParameter("jusername").toLowerCase();
         String password = request.getParameter("jpassword");
         String modificador = "NA";
         JSONObject obj = null;
@@ -71,16 +71,13 @@ public class LoginServlet extends HttpServlet {
         	   Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
                if(connObj != null) {   
-                   CallableStatement cStmt = connObj.prepareCall("{call "+SP_DOPOST+"(?, ?, ?, ?, ?)}");  
+                   CallableStatement cStmt = connObj.prepareCall("{call "+CommonConstants.JWU_SaveWebChatUser+"(?, ?, ?, ?)}");  
                    cStmt.setString(1, systemUsername); 
              	   cStmt.setString(2, systemName);
              	   cStmt.setString(3, username);
              	   cStmt.setString(4, password);
-             	   cStmt.setString(5, modificador);
              	   cStmt.execute();       
                }
-        	//System.out.println("Este es el doPost");
-        	
         } catch(Exception sqlException) {
             sqlException.printStackTrace();
         }
@@ -89,8 +86,8 @@ public class LoginServlet extends HttpServlet {
         out.print(obj);
         out.flush();
     }
-    */
-
+    
+/*
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String system = request.getParameter("system");
         String sysUsername = request.getParameter("username");
@@ -159,7 +156,9 @@ public class LoginServlet extends HttpServlet {
                     stmt.setString(4, systemUsername);
                     stmt.executeUpdate();
                 }
+                
             }
+            
         } catch(Exception sqlException) {
             sqlException.printStackTrace();
         }
@@ -169,7 +168,7 @@ public class LoginServlet extends HttpServlet {
         out.print(obj);
         out.flush();
     }
-    
+    */
     
 
 }
