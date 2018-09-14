@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.geom.RectangularShape;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,8 +25,8 @@ public class UserAuthenticationServlet extends HttpServlet {
     private static String JDBC_URL = CommonConstants.JDBC_URL;
     private static String USER = CommonConstants.DB_USER;
     private static String PASSWORD = CommonConstants.DB_PASSWORD;
-    private static String SP_COUNT_VALUE = CommonConstants.SP_COUNT_VALUE;
-    private static String SP_USER_CREDENTIALS = CommonConstants.SP_USER_CREDENTIALS;
+    private static String SP_COUNT_VALUE = CommonConstants.SP_JWU_CountWebChatUserRegister;
+    private static String SP_USER_CREDENTIALS = CommonConstants.SP_JWU_GetWebChatUserByCredentials;
 	
     @Override
     public void init() throws ServletException {
@@ -37,6 +39,7 @@ public class UserAuthenticationServlet extends HttpServlet {
         String UserParameterDB;
         String passParameterDB;
         String filename = request.getParameter("filename");
+        
         JSONObject obj = new JSONObject();
         Set<String> userList = new HashSet<String>();
         
