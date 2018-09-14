@@ -94,29 +94,31 @@
  });//fin submit  
  function getFileAuhentication(username,password) {
 	 		var filename = $("#filename").val();
+	 		var encoded = encodeURIComponent(filename);
 	 
 		 	//Servicios Datasys
+		 	
 			var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-			var userAuthenticationServiceURL = "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+filename+"";
-			var userAuthenticationServiceURL = "http://localhost:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+filename+"";
-			var urlUserLogin = "http://172.31.251.11:8080/JabberFileManager/LoginServlet?system=temp&username=temp&jusername="+$("#username").val()+"&jpassword="+$("#password").val()+"";
+			var userAuthenticationServiceURL = "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+encoded+"";
+ 			var urlUserLogin = "http://172.31.251.11:8080/JabberFileManager/LoginServlet?system=temp&username=temp&jusername="+$("#username").val()+"&jpassword="+$("#password").val()+"";
+			
 			
 			//Servicios Guatemala
-// 			var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-// 			var userAuthenticationServiceURL = "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+filename+"";
-// 			var urlUserLogin = "http:///mp-fsapp01.mp.gob.gt:8080/JabberFileManager/LoginServlet?system=temp&username=temp&jusername="+$("#username").val()+"&jpassword="+$("#password").val()+"";
+//  			var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
+// 				var userAuthenticationServiceURL = "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+encoded+"";
+//  			var urlUserLogin = "http:///mp-fsapp01.mp.gob.gt:8080/JabberFileManager/LoginServlet?system=temp&username=temp&jusername="+$("#username").val()+"&jpassword="+$("#password").val()+"";
 		  
 			$.ajax({
              method: "GET",
              url: userAuthenticationServiceURL,
-             dataType: "json"
+             dataType: "json",
          }).done(function( data ) {
              console.log( data );
             if( data.result == "success"){
              	$( "#submit" ).prop( "disabled", true );
              	$("#submit").html('Descargando....');
          	   console.log("success");
-               window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename=" + $("#filename").val());
+         	  window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename=" + $("#filename").val());
                setTimeout(
          			  function() 
          			  {
@@ -140,6 +142,7 @@
 				 $('<p>'+errorFailedMessage+'</p>').appendTo('#message').css('color','red');
             }
             else if(data.result == "denied"){
+            	
            	 $( "#message" ).empty();
        	     $("#username,#password").prop("disabled",false);
        	     $( "#submit" ).prop( "disabled", false );	
