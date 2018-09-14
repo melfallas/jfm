@@ -36,8 +36,8 @@ public class LoginServlet extends HttpServlet {
               connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
               if(connObj != null) { 
             	  CallableStatement cStmt = connObj.prepareCall("{call "+ CommonConstants.JWU_GetWebChatUser+"(?, ?)}");  
-            	  cStmt.setString(1, sysUsername); 
-            	  cStmt.setString(2, system); 
+            	  cStmt.setString(1, system); 
+            	  cStmt.setString(2, sysUsername); 
             	  
             	// Process all returned result sets  
                   cStmt.execute();    
@@ -72,11 +72,12 @@ public class LoginServlet extends HttpServlet {
                connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
                if(connObj != null) {   
                    CallableStatement cStmt = connObj.prepareCall("{call "+CommonConstants.JWU_SaveWebChatUser+"(?, ?, ?, ?)}");  
-                   cStmt.setString(1, systemUsername); 
-             	   cStmt.setString(2, systemName);
+                   cStmt.setString(1, systemName); 
+             	   cStmt.setString(2, systemUsername);
              	   cStmt.setString(3, username);
              	   cStmt.setString(4, password);
-             	   cStmt.execute();       
+             	   cStmt.execute();     
+             	  
                }
         } catch(Exception sqlException) {
             sqlException.printStackTrace();
