@@ -48,7 +48,7 @@ public class UserAuthenticationServlet extends HttpServlet {
         String query = " SELECT DISTINCT "+
         "LOWER(SUBSTRING(to_jid, 0, CHARINDEX('@', to_jid))) AS toUser"+
 		",LOWER(SUBSTRING(from_jid, 0, CHARINDEX('@', from_jid))) AS fromUser" +
-       " FROM [dbo].[jm] "+
+       " FROM [dbo].[jm] (NOLOCK) "+
        " WHERE  body_string ='"+url+"'";
         try {
         	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -69,7 +69,7 @@ public class UserAuthenticationServlet extends HttpServlet {
                 	obj.put("result", "denied");
                 	//System.out.println("denied");
                 }else {
-               	 	obj.put("result", "granted");
+                     	 	obj.put("result", "granted");
                	 	//System.out.println("granted");
 	            	CallableStatement cstmt = connObj.prepareCall("exec "+SP_COUNT_VALUE+" ?");
 	                cstmt.setString(1, webChatUser);
