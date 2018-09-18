@@ -82,6 +82,7 @@
       var username = user.toLowerCase();
       var password = pass;
       if(username.trim() != "" && password.trim() != "") {
+    	  
     	  getFileAuhentication(username,password);
       }else{
     	  $('<p>'+emptyFields+'</p>').appendTo('#message').css('color','red');
@@ -92,7 +93,6 @@
 		 $( "#submit" ).prop( "disabled", false);
       }// fin if 1
  });//fin submit  
- 
 
  function resetLoginForm() {
                  $("#message").empty();
@@ -101,39 +101,40 @@
                  $('#submit').css('color','#fff');
                  $('#submit').css('border-color','#2e6da4');
                  $( "#submit" ).prop( "disabled", false);
-      $("#username").prop("disabled",false);
-      $("#password").prop("disabled",false);
+			     $("#username").prop("disabled",false);
+			     $("#password").prop("disabled",false);
                  $('#password').val('');
  }             
 
- 
  function getFileAuhentication(username,password) {
 	 		var filename = $("#filename").val();
 	 		var encoded = encodeURIComponent(filename);
 	 
 		 	//Servicios Datasys
-		 	
 			var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
 			var userAuthenticationServiceURL = "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+encoded+"";
  			var urlUserLogin = "http://172.31.251.11:8080/JabberFileManager/LoginServlet?system=temp&username=temp&jusername="+$("#username").val()+"&jpassword="+$("#password").val()+"";
 			
 			
 			//Servicios Guatemala
-//   			var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
+//  			var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
 // 			var userAuthenticationServiceURL = "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+encoded+"";
 //  			var urlUserLogin = "http:///mp-fsapp01.mp.gob.gt:8080/JabberFileManager/LoginServlet?system=temp&username=temp&jusername="+$("#username").val()+"&jpassword="+$("#password").val()+"";
-			
- 			$.ajax({
+		  
+ 			
+			$.ajax({
              method: "GET",
              url: userAuthenticationServiceURL,
              dataType: "json",
          }).done(function( data ) {
              console.log( data );
             if( data.result == "success"){
+            	var filename = $("#filename").val();
+    	 		var encoded = encodeURIComponent(filename);
              	$( "#submit" ).prop( "disabled", true );
              	$("#submit").html('Descargando....');
-         	   console.log("success");
-         	  window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename=" + $("#filename").val());
+             	var encoded = encodeURIComponent(filename);
+            	  window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename=" +encoded+"");
                setTimeout(
          			  function() 
          			  {
@@ -184,26 +185,31 @@
               	   url : urlUserLogin,
               	   success : function(data){
               	   	alert('success');
-              	  window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename=" + $("#filename").val());
+              	  var filename = $("#filename").val();
+      	 		var encoded = encodeURIComponent(filename);
+              	  window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename=" +encoded+"");
               	   },
-              	   timeout: 5000,  
+              	   timeout: 10000,  
               	   error: function(request, status, err) {
               	        if (status == "timeout") {
               	     	$.ajax({
                        	   type : "POST",
                        	   url : urlUserLogin,
                        	   success : function(data){
-                       		 $( "#message" ).empty();
+                       		 
               	        	 $("#username,#password").prop("disabled",false);
-              	        	$('#password').val('');
+              	        	 $('#password').val('');
                        	   	 $( "#submit" ).prop( "disabled", false );
                        	  	 $("#submit").html('Cargando....');
+                       	  	 $( "#message" ).empty();
+                       	  resetLoginForm();
               	        	 $('<p>' + 'Se agotó el tiempo en espera. Por favor intente de nuevo' + '</p>').appendTo('#message').css('color','red');
                        	   //	alert('success');
-                       	   		resetLoginForm();
+                       	   		
                        	   }, 
                        	   error: function(request, status, err) {
                        	        //error
+                       	         $( "#message" ).empty();
                        	         $('<p>' + 'Por favor intente de nuevo' + '</p>').appendTo('#message').css('color','red');
                        		//alert('ERROR');
                        	    }
