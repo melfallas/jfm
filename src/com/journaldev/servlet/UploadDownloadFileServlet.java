@@ -44,7 +44,9 @@ public class UploadDownloadFileServlet extends HttpServlet {
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String fileName = request.getParameter("filename");
+		
+		String fileResult = request.getParameter("filename");
+		String fileName = java.net.URLDecoder.decode(fileResult, "UTF-8");
 		
 		if(fileName == null || fileName.equals("")){
 			throw new ServletException("File Name can't be null or empty");
