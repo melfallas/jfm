@@ -92,6 +92,21 @@
 		 $( "#submit" ).prop( "disabled", false);
       }// fin if 1
  });//fin submit  
+ 
+
+ function resetLoginForm() {
+                 $("#message").empty();
+                 $("#submit").html('Iniciar descarga');
+                 $('#submit').css('background-color','#337ab7');
+                 $('#submit').css('color','#fff');
+                 $('#submit').css('border-color','#2e6da4');
+                 $( "#submit" ).prop( "disabled", false);
+      $("#username").prop("disabled",false);
+      $("#password").prop("disabled",false);
+                 $('#password').val('');
+ }             
+
+ 
  function getFileAuhentication(username,password) {
 	 		var filename = $("#filename").val();
 	 		var encoded = encodeURIComponent(filename);
@@ -104,11 +119,11 @@
 			
 			
 			//Servicios Guatemala
-//  			var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-// 				var userAuthenticationServiceURL = "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+encoded+"";
+//   			var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
+// 			var userAuthenticationServiceURL = "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+encoded+"";
 //  			var urlUserLogin = "http:///mp-fsapp01.mp.gob.gt:8080/JabberFileManager/LoginServlet?system=temp&username=temp&jusername="+$("#username").val()+"&jpassword="+$("#password").val()+"";
-		  
-			$.ajax({
+			
+ 			$.ajax({
              method: "GET",
              url: userAuthenticationServiceURL,
              dataType: "json",
@@ -166,7 +181,7 @@
          	   console.log("validate AD");
          	  	$.ajax({
               	   type : "GET",
-              	   url : url,
+              	   url : urlUserLogin,
               	   success : function(data){
               	   	alert('success');
               	  window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename=" + $("#filename").val());
@@ -185,7 +200,7 @@
                        	  	 $("#submit").html('Cargando....');
               	        	 $('<p>' + 'Se agotó el tiempo en espera. Por favor intente de nuevo' + '</p>').appendTo('#message').css('color','red');
                        	   //	alert('success');
-                       	   		//resetLoginForm();
+                       	   		resetLoginForm();
                        	   }, 
                        	   error: function(request, status, err) {
                        	        //error
