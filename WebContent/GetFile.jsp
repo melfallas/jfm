@@ -45,13 +45,13 @@
         var username = $("#username").val();
         var password = $("#password").val();
         //Datasys
-        var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
+        var urlADcredentialService = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
         //Guatemala
-        //var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
+        //var urlADcredentialService = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
 
         $.ajax({
             method: "GET",
-            url: url,
+            url: urlADcredentialService,
             dataType: "json"
         }).done(function( data ) {
             console.log( data );
@@ -106,22 +106,22 @@
                  $('#password').val('');
  }             
 
+ 
  function getFileAuhentication(username,password) {
 	 		var filename = $("#filename").val();
 	 		var encoded = encodeURIComponent(filename);
 	 
 		 	//Servicios Datasys
-			var url = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-			var userAuthenticationServiceURL = "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+encoded+"";
- 			var urlUserLogin = "http://172.31.251.11:8080/JabberFileManager/LoginServlet?system=temp&username=temp&jusername="+$("#username").val()+"&jpassword="+$("#password").val()+"";
-			
-			
+		 	
+// 			var urlADcredentialService = "http://172.31.251.128:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
+// 			var userAuthenticationServiceURL = "http://172.31.251.11:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+encoded+"";
+//  			var urlUserLogin = "http://172.31.251.11:8080/JabberFileManager/LoginServlet?system=temp&username=temp&jusername="+$("#username").val()+"&jpassword="+$("#password").val()+"";
+
 			//Servicios Guatemala
-//  			var url = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
-// 			var userAuthenticationServiceURL = "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+encoded+"";
-//  			var urlUserLogin = "http:///mp-fsapp01.mp.gob.gt:8080/JabberFileManager/LoginServlet?system=temp&username=temp&jusername="+$("#username").val()+"&jpassword="+$("#password").val()+"";
-		  
- 			
+  			var urlADcredentialService = "http://172.18.142.15:8085/api/UsuarioADObtenerPorCredenciales/"+username+"/"+password+"/";
+  			var userAuthenticationServiceURL = "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/UserAuthenticationServlet?webuser="+username+"&pass="+password+"&filename="+encoded+"";
+ 			var urlUserLogin = "http://mp-fsapp01.mp.gob.gt:8080/JabberFileManager/LoginServlet?system=temp&username=temp&jusername="+$("#username").val()+"&jpassword="+$("#password").val()+"";
+
 			$.ajax({
              method: "GET",
              url: userAuthenticationServiceURL,
@@ -159,9 +159,9 @@
             }
             else if(data.result == "denied"){
             	
-           	 $( "#message" ).empty();
-       	     $("#username,#password").prop("disabled",false);
-       	     $( "#submit" ).prop( "disabled", false );	
+           	 	 $( "#message" ).empty();
+       	     	 $("#username,#password").prop("disabled",false);
+       	     	 $( "#submit" ).prop( "disabled", false );	
 	 		     $('#submit').css('background-color','grey');
 	         	 $( "#submit" ).prop( "disabled", true );
 	         	 $("#submit").html('Iniciar descarga');
@@ -182,14 +182,13 @@
          	   console.log("validate AD");
          	  	$.ajax({
               	   type : "GET",
-              	   url : urlUserLogin,
+              	   url : urlADcredentialService,
               	   success : function(data){
-              	   	alert('success');
               	  var filename = $("#filename").val();
-      	 		var encoded = encodeURIComponent(filename);
+      	 		  var encoded = encodeURIComponent(filename);
               	  window.location.replace("/JabberFileManager/UploadDownloadFileServlet?filename=" +encoded+"");
               	   },
-              	   timeout: 10000,  
+              	   timeout:10000,  
               	   error: function(request, status, err) {
               	        if (status == "timeout") {
               	     	$.ajax({
@@ -202,7 +201,7 @@
                        	   	 $( "#submit" ).prop( "disabled", false );
                        	  	 $("#submit").html('Cargando....');
                        	  	 $( "#message" ).empty();
-                       	  resetLoginForm();
+                       	  	 resetLoginForm();
               	        	 $('<p>' + 'Se agotó el tiempo en espera. Por favor intente de nuevo' + '</p>').appendTo('#message').css('color','red');
                        	   //	alert('success');
                        	   		
@@ -210,7 +209,9 @@
                        	   error: function(request, status, err) {
                        	        //error
                        	         $( "#message" ).empty();
-                       	         $('<p>' + 'Por favor intente de nuevo' + '</p>').appendTo('#message').css('color','red');
+                       	        
+                       	      resetLoginForm();
+                       	   $('<p>' + 'Por favor intente de nuevo' + '</p>').appendTo('#message').css('color','red');
                        		//alert('ERROR');
                        	    }
                        	  });
