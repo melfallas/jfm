@@ -16,6 +16,7 @@ import java.sql.*;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 
 @WebServlet("/UserAuthenticationServlet")
 public class UserAuthenticationServlet extends HttpServlet {
@@ -75,13 +76,16 @@ public class UserAuthenticationServlet extends HttpServlet {
 	                cstmt.setString(1, webChatUser);
 	                cstmt.execute();
 	                final ResultSet rs = cstmt.getResultSet();
-	                 if (rs.next()) {
+	                 if (rs.next()) {   
 	                	 int  countValue = rs.getInt(1);
 	                	 //System.out.println("Value from first result set = " + countValue); 
 	                	 if(countValue > 0){
-	                	     CallableStatement cStmt2 = connObj.prepareCall("{call "+SP_USER_CREDENTIALS+"(?,?)}");
+	                		 int type = countValue > 1 ? 1 : 0;
+	                	 
+	                	     CallableStatement cStmt2 = connObj.prepareCall("{call "+SP_USER_CREDENTIALS+"(?,?,?)}");
 	                	     cStmt2.setString(1, webChatUser);
 	                	     cStmt2.setString(2, password);
+	                	     cStmt2.setInt(3, type);
 	                	     cStmt2.execute();
 	                	     // Process all returned result sets 
 	                         final ResultSet rs2 = cStmt2.getResultSet();
