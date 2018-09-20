@@ -89,18 +89,20 @@ public class UserAuthenticationServlet extends HttpServlet {
 	                	     cStmt2.execute();
 	                	     // Process all returned result sets 
 	                         final ResultSet rs2 = cStmt2.getResultSet();
-	                         if (rs2.next()) {
+	                         boolean validCredential = false;
+	                         while (rs2.next() && ! validCredential) {
 	                        	 UserParameterDB = rs2.getString("JWU_WebChatUser");
 	                        	 passParameterDB= rs2.getString("JWU_WebChatPassword");
 	                        	 if(webChatUser.toLowerCase().equals(UserParameterDB.toLowerCase())  && password.equals(passParameterDB)){
-		                    		 obj.put("result", "success");
-	                        	 }else{ 
-		                        	 obj.put("result", "error");
-		                    	 }
+	                        		 validCredential = true;
+	                        	 }
 	                         }
-	                         else{ 
+	                         if(validCredential){
+	                    		 obj.put("result", "success");
+                        	 }else{ 
 	                        	 obj.put("result", "error");
 	                    	 }
+	                         
 	                	 }else{
 	                		 // Si el count es 0 se envía result = validate para autenticar con AD
 	                		 obj.put("result", "validate");
