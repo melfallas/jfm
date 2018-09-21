@@ -37,9 +37,13 @@ public class GetSessionAdminChatRoomsServlet extends HttpServlet {
             connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
             if(connObj != null) {
                 Statement statement = connObj.createStatement();
-                ResultSet results = statement.executeQuery("SELECT room_jid " +
-                        "FROM " + CHATROOMS_TABLE +
-                        " WHERE creator_jid LIKE '"+ username + "%'");
+                String query = 
+                				"SELECT room_jid " +
+                                "FROM "
+                                + "" + CHATROOMS_TABLE +
+                                " WHERE creator_jid LIKE '"+ username + "%'"
+                                ;
+                ResultSet results = statement.executeQuery(query);
 
                 while(results.next()) {
                     obj = new JSONObject();

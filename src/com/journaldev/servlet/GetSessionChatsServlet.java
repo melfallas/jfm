@@ -37,9 +37,13 @@ public class GetSessionChatsServlet extends HttpServlet {
             connObj = DriverManager.getConnection(JDBC_URL,USER,PASSWORD);
             if(connObj != null) {
                 Statement statement = connObj.createStatement();
-                ResultSet results = statement.executeQuery("SELECT  chat " +
-                        "FROM " + CHATS_TABLE +
-                        " WHERE username = '"+ username + "'");
+                String query = 
+                				"SELECT  chat " +
+                                "FROM " + CHATS_TABLE +
+                                " WHERE username = '"+ username + "' "
+                                + "ORDER BY chat ASC";
+                                ;
+                ResultSet results = statement.executeQuery(query);
 
                 while(results.next()) {
                     obj = new JSONObject();
