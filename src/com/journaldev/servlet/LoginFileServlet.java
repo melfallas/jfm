@@ -14,7 +14,7 @@ public class LoginFileServlet extends HttpServlet {
 
     private String fileName;
     private String username;
-
+    
     public void init() throws ServletException {
 
     }
@@ -26,6 +26,10 @@ public class LoginFileServlet extends HttpServlet {
         request.setAttribute("fileName",fileName);
         username = request.getParameter("usr");
         request.setAttribute("username",username);
+        
+        request.setAttribute("urlADcredentialService",CommonConstants.AD_CREDENTIAL_SERVICE_URL);
+        request.setAttribute("userAuthenticationServiceURL",CommonConstants.USER_AUTHENTICATION_SERVICE_URL);
+        request.setAttribute("urlUserLogin",CommonConstants.USER_LOGIN_SERVICE_URL);
 
         String nextHTML = "/GetFile.jsp";
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextHTML);
